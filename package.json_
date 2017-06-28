@@ -1,0 +1,17 @@
+{
+  "description": "Telegram Bot",
+  "scripts": {
+    "start": "./node_modules/.bin/node-es6 ./src/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "nedb": "^1.8.0",
+    "node-es6": "^0.3.1",
+    "node-telegram-bot-api": "git+https://github.com/w-site/node-telegram-bot-api.git",
+    "request": "^2.81.0"
+  },
+  "engines": {
+    "node": "5.7.0",
+    "npm": "3.6.0"
+  }
+}

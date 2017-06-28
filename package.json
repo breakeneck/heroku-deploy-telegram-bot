@@ -1,17 +1,26 @@
 {
-  "description": "Telegram Bot",
-  "scripts": {
-    "start": "./node_modules/.bin/node-es6 ./src/index.js"
-  },
-  "license": "MIT",
+  "name": "heroku-deploy-telegram-bot",
+  "version": "1.0.0",
+  "description": "uz.gov Telegram Bot",
+  "main": "index.js",
   "dependencies": {
     "nedb": "^1.8.0",
     "node-es6": "^0.3.1",
-    "node-telegram-bot-api": "git+https://github.com/w-site/node-telegram-bot-api.git",
+    "node-telegram-bot-api": "^0.22.0",
     "request": "^2.81.0"
   },
-  "engines": {
-    "node": "5.7.0",
-    "npm": "3.6.0"
-  }
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/breakeneck/heroku-deploy-telegram-bot.git"
+  },
+  "author": "Yuri Datsenko",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/breakeneck/heroku-deploy-telegram-bot/issues"
+  },
+  "homepage": "https://github.com/breakeneck/heroku-deploy-telegram-bot#readme"
 }
