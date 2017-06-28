@@ -12,6 +12,7 @@ bot.setWebHook(url);
 
 let chatId = null;
 
+console.log('Bot Started, Waiting for /start command');
 bot.onText('/start', (msg, match) => {
     chatId = msg.chat.id;
 
