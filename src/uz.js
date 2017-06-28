@@ -8,11 +8,12 @@
 import request from 'request';
 
 const SEARCH_URL = 'http://booking.uz.gov.ua/purchase/search/';
-const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/?term=';
+//const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/?term=';
 
 let time = () => (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
     .toISOString().replace('T',' ').split('.').shift();
-let ping = () => {
+
+exports.ping = () => new Promise((resolve, reject) => {
     request
         .post({
             url: SEARCH_URL,
@@ -34,17 +35,27 @@ let ping = () => {
             if(!body || typeof body === 'string')
                 return;
 
-            if(typeof body.value === 'string')
+            if(typeof body.value === 'string') {
                 console.log(time() + ' - Nothing found');
-            else
+                reject(time() + ' - Nothing found');
+            }
+            else {
+                let resultArr = [];
                 body.value.forEach(value => {
                     let tickets = value.types.map(type => {
                         return type.places + ' ' + type.title;
                     }).join("\n");
                     let message = `${value.from.station} - ${value.till.station} (${value.till.src_date}) \n${tickets}`;
-                    console.log(time() + ' - ' + message);
+                    resultArr.push(time() + ' - ' + message);
                 });
+                console.log(resultArr.join("\n"));
+                resolve(resultArr.join("\n"));
+            }
         });
-};
+});
 
-export default ping;
+
+//
+// let Datastore = require('nedb');
+// let db = new Datastore({ filename: 'db/items.nedb' });
+// db.loadDatabase(err => err ? console.error('DB LOAD ERROR '+err) : '');
