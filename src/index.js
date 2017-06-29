@@ -18,7 +18,7 @@ let lastResponse = [];
 console.log('Bot Started, Waiting for /start command');
 
 // RUNNING BOT
-bot.onText(/\/start (.+)/, (msg, match) => {
+bot.onText(/\/start/, (msg, match) => {
     let chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station');
