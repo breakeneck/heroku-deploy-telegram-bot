@@ -11,17 +11,40 @@ bot = new TelegramBot(token, { webHook: { port } });
 bot.setWebHook(url);
 
 let chatId = null;
+let scriptRepeatTime = 5*60*1000;
+let interval = null;
+let lastErrorMessage = '';
 
 console.log('Bot Started, Waiting for /start command');
+
+// RUNNING BOT
 bot.onText(/\/start/, (msg, match) => {
     chatId = msg.chat.id;
 
     bot.sendMessage(chatId, 'Script started');
+
+    execUzPing();
+    clearInterval(interval);
+    interval = setInterval(execUzPing, scriptRepeatTime);
+});
+
+bot.onText(/\/status/, (msg, match) => {
+    if(!chatId)
+        bot.sendMessage(msg.chat.id, 'To start script, please use /start command first');
+    else
+        bot.sendMessage(chatId, lastErrorMessage);
+});
+
+
+
+
+let execUzPing = () =>
     uz.ping().then(
         result => bot.sendMessage(chatId, result),
-        error => bot.sendMessage(chatId, error)
+        error => lastErrorMessage = error
     );
-});
+
+
 
 /*
 let setInterval(() => )
