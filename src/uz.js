@@ -43,7 +43,7 @@ exports.searchStation = (term) =>
 
 
 // LOCAL HELPERS
-let time = () => moment().fromNow()+': ';
+let time = () => moment().format('hh:mm')+' - ';
 
 let formatResponse = (body) => {
     let resultArr = [];
@@ -52,7 +52,7 @@ let formatResponse = (body) => {
             return type.places + ' ' + type.title;
         }).join("\n");
         let message = `${value.from.station} - ${value.till.station} (${value.till.src_date}) \n${tickets}`;
-        resultArr.push(time() + ' - ' + message);
+        resultArr.push(message);
     });
     console.log(resultArr.join("\n"));
     return resultArr.join("\n");

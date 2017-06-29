@@ -93,15 +93,16 @@ bot.onText(/\/to (.+)/, (msg, match) => {
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     let msg = callbackQuery.message;
-    let action, stationId;
     let chatId = msg.chat.id;
-    [action, stationId] = callbackQuery.data.split('_');
+    let action, stationId, stationTitle;
+    [action, stationId, stationTitle] = callbackQuery.data.split('_');
 
     chats[chatId][action] = {
-        title: msg.text,
+        title: stationTitle,
         value: stationId
     };
 
+    console.log(callbackQuery);
     console.log(chats[chatId]);
 });
 
@@ -173,11 +174,13 @@ let execUzTrainSearch = (chatId) => {
 let buttonOpts = (action, uzStationsResponse) => {
     return {
         reply_markup: {
-            inline_keyboard: [
+            resize_keyboard: true,
+            one_time_keyboard: true,
+            keyboard: [
                 uzStationsResponse.map((station) => {
                     return {
                         text: station.title,
-                        callback_data: action + '_' + station.value
+                        callback_data: [action, station.value, station.title].join('_')
                     }
                 })
             ]
