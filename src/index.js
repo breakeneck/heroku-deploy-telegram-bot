@@ -107,8 +107,9 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     console.log('Data is ready for scheduler', scheduler.get(userId));
 
     bot.sendMessage(userId, 'Departure time is set, script will check each '
-        + Math.round(scriptRepeatTime/60000) + ' minutes', helper.hideKeyboardOpts()
-        + '. Check /schedulers command to view all schedulers'
+            + Math.round(scriptRepeatTime/60000) + ' minutes'
+            + '. Check /schedulers command to view all schedulers',
+        helper.hideKeyboardOpts()
     );
     // SEARCH FOR RESULT & RUN SCHEDULER
     execUzTrainSearch(userId);
@@ -158,11 +159,6 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     scheduler.debug();
 
     let [userId, action, stationId, stationTitle] = callbackQuery.data.split('_');
-  /*  let msg = callbackQuery.message;
-
-    console.log('USER FROM ID', userId);
-    console.log('MSG', msg);
-    console.log('callbackQuery', callbackQuery);*/
 
     scheduler.get(userId)[action] = {
         title: stationTitle,
