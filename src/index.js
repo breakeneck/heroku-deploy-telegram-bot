@@ -192,8 +192,8 @@ let hideKeyboardOpts = () => {
 let buttonOpts = (action, uzStationsResponse) => {
     return {
         reply_markup: {
-            resize_keyboard: true,
-            one_time_keyboard: true,
+            // resize_keyboard: true,
+            // one_time_keyboard: true,
             keyboard: [
                 uzStationsResponse.map((station) => {
                     return {
