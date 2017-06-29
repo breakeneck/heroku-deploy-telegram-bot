@@ -21,7 +21,11 @@ console.log('Bot Started, Waiting for /start command');
 bot.onText(/\/start/, (msg, match) => {
     let chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station');
+    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station', {
+        reply_markup: JSON.stringify({
+            hide_keyboard: true
+        })
+    });
 
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(chats.hasOwnProperty(chatId) && chats[chatId].interval)
