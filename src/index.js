@@ -163,6 +163,7 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
 
     console.log('USER FROM ID', userId);
     console.log('MSG', msg);
+    console.log('callbackQuery', callbackQuery);
 
     scheduler.get(userId)[action] = {
         title: stationTitle,
