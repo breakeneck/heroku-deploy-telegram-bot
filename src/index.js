@@ -7,9 +7,7 @@ const port = process.env.PORT;
 const mode = process.env.NODE_ENV;
 const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
 
-let bot;
-bot = new TelegramBot(token, { webHook: { port } });
-bot.setWebHook(url);
+const scriptRepeatTime = 5*60*1000;
 
 let _users = {}; // SEE addScheduler FOR OBJECT STRUCTURE
 let scheduler = (userId) => _users[userId].schedulers[_users[userId].currentSchedulerName];
@@ -20,7 +18,7 @@ let addScheduler = (userId, schedulerName) => {
         clearInterval(_users[userId].schedulers[schedulerName].interval);
 
     // INIT SCHEDULER
-    _users[userId].schedulers[schedulerName] = {
+    _users[userId]['schedulers'][schedulerName] = {
         id: userId,
         interval: null,
         from: null,
@@ -32,10 +30,12 @@ let addScheduler = (userId, schedulerName) => {
 let listSchedulers = (userId) => Object.keys(_users[userId].schedulers);
 let schedulerByName = (userId, schedulerName) => _users[userId].schedulers[schedulerName];
 
-const scriptRepeatTime = 5*60*1000;
-
 console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
+
+let bot;
+bot = new TelegramBot(token, { webHook: { port } });
+bot.setWebHook(url);
 // RUNNING BOT
 bot.onText(/\/start (.+)/, (msg, match) => {
     let userId = msg.from.id;
