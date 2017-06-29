@@ -17,8 +17,15 @@ let addScheduler = (userId, schedulerName) => {
     if(_users[userId] && _users[userId].schedulers[schedulerName])
         clearInterval(_users[userId].schedulers[schedulerName].interval);
 
-    // INIT SCHEDULER
-    _users[userId]['schedulers'][schedulerName] = {
+    // INIT _users OBJECT
+    if(!_users[userId])
+        _users[userId] = {
+            schedulers: {},
+            currentSchedulerName: ''
+        };
+
+    // INIT SCHEDULER OBJECT INSIDE _users
+    _users[userId].schedulers[schedulerName] = {
         id: userId,
         interval: null,
         from: null,
