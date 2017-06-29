@@ -74,7 +74,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
         bot.sendMessage(chatId, 'Please, set up from station first using /from command');
 
     //
-    uz.stationSearch(query).then(response => {
+    uz.searchStation(query).then(response => {
         switch (response.length) {
             case 0:
                 bot.sendMessage(msg.chat.id, 'Nothing found, try again please /to command');
