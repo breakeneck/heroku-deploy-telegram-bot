@@ -34,7 +34,7 @@ exports.buttonOpts = (action, uzStationsResponse) => {
         reply_markup: {
             // resize_keyboard: true,
             // one_time_keyboard: true,
-            keyboard: [
+            inline_keyboard: [
                 uzStationsResponse.map((station) => {
                     return {
                         text: station.title,
