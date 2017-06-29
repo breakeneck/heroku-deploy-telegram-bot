@@ -21,11 +21,7 @@ console.log('Bot Started, Waiting for /start command');
 bot.onText(/\/start/, (msg, match) => {
     let chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station', {
-        reply_markup: JSON.stringify({
-            hide_keyboard: true
-        })
-    });
+    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station', hideKeyboardOpts());
 
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(chats.hasOwnProperty(chatId) && chats[chatId].interval)
@@ -54,10 +50,10 @@ bot.onText(/\/from (.+)/, (msg, match) => {
     uz.searchStation(query).then(response => {
         switch (response.length) {
             case 0:
-                bot.sendMessage(msg.chat.id, 'Nothing found, try again please /from command');
+                bot.sendMessage(msg.chat.id, 'Nothing found, try again please /from command', hideKeyboardOpts());
                 break;
             case 1:
-                bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command');
+                bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command', hideKeyboardOpts());
                 chats[chatId].from = response[0];
                 break;
             default:
@@ -106,8 +102,14 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
         value: stationId
     };
 
-    console.log(callbackQuery);
-    console.log(chats[chatId]);
+    switch(action) {
+        case 'from':
+            bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command');
+            break;
+        case 'to':
+            bot.sendMessage(msg.chat.id, 'Arrival station is selected, please, add departure date using /at command');
+            break;
+    }
 });
 
 
@@ -173,6 +175,14 @@ let execUzTrainSearch = (chatId) => {
         result => bot.sendMessage(chatId, result),
         error => chat.lastResponse = error
     );
+};
+
+let hideKeyboardOpts = () => {
+    return {
+        reply_markup: JSON.stringify({
+            hide_keyboard: true
+        })
+    }
 };
 
 let buttonOpts = (action, uzStationsResponse) => {
