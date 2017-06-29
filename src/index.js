@@ -194,16 +194,16 @@ let execUzTrainSearch = (userId) => {
     );
 };
 
-let sendStatus = (selectedScheduler) => {
+let sendStatus = (currentScheduler) => {
     let response = [];
-    if(current.from.title)
-        response.push(`From: ${current.from.title}`);
-    if(current.to && current.to.title)
-        response.push(`To: ${current.to.title}`);
-    if(current.at)
-        response.push(`At: ${current.at}`);
-    response.push('Scheduler '+(current.interval ? 'enabled' : 'not set'));
-    response.push(`Last Response ${current.lastResponse}`);
+    if(currentScheduler.from.title)
+        response.push(`From: ${currentScheduler.from.title}`);
+    if(currentScheduler.to && currentScheduler.to.title)
+        response.push(`To: ${currentScheduler.to.title}`);
+    if(currentScheduler.at)
+        response.push(`At: ${currentScheduler.at}`);
+    response.push('Scheduler '+(currentScheduler.interval ? 'enabled' : 'not set'));
+    response.push(`Last Response ${currentScheduler.lastResponse}`);
 
     bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
 };
