@@ -42,4 +42,12 @@ chats[chatId][action] = {
     value: stationId
 };
 
+
+let getChat = (chatId) => chats[chatId];
+
+if(getChat(chatId)['yo'])
+    console.log('sadas');
+else
+    console.log('213213');
+
 console.log(chats);
