@@ -101,6 +101,8 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
         title: msg.text,
         value: stationId
     };
+
+    console.log(chats[chatId]);
 });
 
 
@@ -123,8 +125,8 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     console.log('Data is ready for scheduler', chats[chatId]);
 
     // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzPing(chatId);
-    chats[chatId].interval = setInterval(() => execUzPing(chatId), scriptRepeatTime);
+    execUzTrainSearch(chatId);
+    chats[chatId].interval = setInterval(() => execUzTrainSearch(chatId), scriptRepeatTime);
 });
 
 
@@ -160,9 +162,9 @@ let validateCommand = (msg) => {
 };
 
 
-let execUzPing = (chatId) => {
+let execUzTrainSearch = (chatId) => {
     let chat = chats[chatId];
-    ping(chat.from.value, chat.to.value, chat.at).then(
+    uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
         result => bot.sendMessage(chatId, result),
         error => chat.lastResponse = error
     );
