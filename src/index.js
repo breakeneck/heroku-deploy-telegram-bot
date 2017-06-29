@@ -117,15 +117,16 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
 
 bot.onText(/\/status/, (msg, match) => {
+    scheduler.debug();
+
     let userId = msg.from.id;
     let current = scheduler.get(userId);
-    console.log(current);
 
     if(validateCommand(msg)) {
         let response = [];
         if(current.from.title)
             response.push(`From: ${current.from.title}`);
-        if(current.to.title)
+        if(current.to && current.to.title)
             response.push(`To: ${current.to.title}`);
         if(current.at)
             response.push(`At: ${current.at}`);
@@ -137,10 +138,11 @@ bot.onText(/\/status/, (msg, match) => {
 });
 
 bot.onText(/\/status (.+)/, (msg, match) => {
+    scheduler.debug();
+
     let userId = msg.from.id;
     let schedulerName = match[0];
     let chat = scheduler.getByName(userId, schedulerName);
-    console.log(chat);
 
     if(validateCommand(msg)) {
         let response = [];
@@ -175,6 +177,7 @@ bot.onText(/\/stop/, (msg, match) => {
 
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
+    scheduler.debug();
 
     let [action, stationId, stationTitle] = callbackQuery.data.split('_');
     let msg = callbackQuery.message;

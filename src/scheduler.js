@@ -22,8 +22,8 @@ exports.add = (userId, schedulerName) => {
     _users[userId].schedulers[schedulerName] = {
         id: userId,
         interval: null,
-        from: null,
-        to: null,
+        from: {},
+        to: {},
         at: ''
     };
     _users[userId].currentSchedulerName = schedulerName;
@@ -40,3 +40,6 @@ exports.getByName = (userId, schedulerName) =>
 
 exports.get = (userId) =>
     _users[userId].schedulers[_users[userId].currentSchedulerName];
+
+exports.debug = () =>
+    console.log(_users);
