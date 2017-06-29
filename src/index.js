@@ -40,6 +40,8 @@ bot.onText(/\/start/, (msg, match) => {
 
 
 bot.onText(/\/from (.+)/, (msg, match) => {
+    let chatId = msg.chat.id;
+
     if(validateCommand(msg)) {
         uz.stationSearch(match[1]).then(response => {
             switch (response.length) {
@@ -101,6 +103,8 @@ bot.onText(/\/to (.+)/, (msg, match) => {
 
 
 bot.onText(/\/status/, (msg, match) => {
+    let chatId = msg.chat.id;
+
     if(validateCommand(msg))
         bot.sendMessage(msg.chat.id, chats[chatId].lastResponse);
 });
