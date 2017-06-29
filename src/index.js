@@ -186,12 +186,11 @@ let validateCommand = (msg) => {
 };
 
 let execUzTrainSearch = (chatId) => {
-    let chat = chats[chatId];
     uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
         result => {
-            chat.lastResponse = result;
+            chats[chatId].lastResponse = result;
             bot.sendMessage(chatId, result)
         },
-        error => chat.lastResponse = error
+        error => chats[chatId].lastResponse = error
     );
 };
