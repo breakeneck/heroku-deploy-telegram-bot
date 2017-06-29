@@ -98,7 +98,7 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     [action, stationId] = callbackQuery.data.split('_');
 
     chats[chatId][action] = {
-        title: callbackQuery.message,
+        title: msg.text,
         value: stationId
     };
 });
