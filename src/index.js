@@ -184,7 +184,7 @@ let validateCommand = (msg) => {
 };
 
 let execUzTrainSearch = (userId) => {
-    uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
+    uz.searchTrain(scheduler.get(userId).from.value, scheduler.get(userId).to.value, scheduler.get(userId).at).then(
         result => {
             scheduler.get(userId).lastResponse = result;
             bot.sendMessage(userId, result)
