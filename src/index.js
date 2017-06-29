@@ -119,10 +119,22 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
 bot.onText(/\/status/, (msg, match) => {
     let chatId = msg.chat.id;
-    console.log(chats[chatId]);
+    let chat = chats[chatId];
+    console.log(chat);
 
-    if(validateCommand(msg))
-        bot.sendMessage(msg.chat.id, chats[chatId].lastResponse || 'Scheduler is empty', helper.hideKeyboardOpts());
+    if(validateCommand(msg)) {
+        let response = [];
+        if(chat.from.title)
+            response.push(`From: ${chat.from.title}`);
+        if(chat.to.title)
+            response.push(`To: ${chat.to.title}`);
+        if(chat.at)
+            response.push(`At: ${chat.at}`);
+        response.push('Scheduler '+(chat.interval ? 'enabled' : 'not set'));
+        response.push(`Last Response ${chat.lastResponse}`);
+
+        bot.sendMessage(msg.chat.id, response.join("\n"), helper.hideKeyboardOpts());
+    }
 });
 
 bot.onText(/\/stop/, (msg, match) => {
@@ -176,7 +188,10 @@ let validateCommand = (msg) => {
 let execUzTrainSearch = (chatId) => {
     let chat = chats[chatId];
     uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
-        result => bot.sendMessage(chatId, result),
+        result => {
+            chat.lastResponse = result;
+            bot.sendMessage(chatId, result)
+        },
         error => chat.lastResponse = error
     );
 };
