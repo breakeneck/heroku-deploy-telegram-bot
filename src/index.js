@@ -45,7 +45,7 @@ bot.onText(/\/from (.+)/, (msg, match) => {
     let chatId = msg.chat.id;
     let query = match[1];
 
-    if(!helper.validateCommand(msg))
+    if(!validateCommand(msg))
         return;
 
     uz.searchStation(query).then(response => {
@@ -69,7 +69,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
     let query = match[1];
 
     // VALIDATION
-    if(!helper.validateCommand(msg))
+    if(!validateCommand(msg))
         return;
     if(!chats[chatId].from)
         bot.sendMessage(chatId, 'Please, set up from station first using /from command');
@@ -97,7 +97,7 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     let at = match[1];
 
     // VALIDATION
-    if(!helper.validateCommand(msg))
+    if(!validateCommand(msg))
         return;
     if(!chats[chatId].from)
         bot.sendMessage(chatId, 'Please, set up departure station first using /from command');
@@ -112,8 +112,8 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
     bot.sendMessage(chatId, 'Departure time is set, script will check each ' + Math.round(scriptRepeatTime/60000) + ' minutes', helper.hideKeyboardOpts());
     // SEARCH FOR RESULT & RUN SCHEDULER
-    helper.execUzTrainSearch(chatId);
-    chats[chatId].interval = setInterval(() => helper.execUzTrainSearch(chatId), scriptRepeatTime);
+    execUzTrainSearch(chatId);
+    chats[chatId].interval = setInterval(() => execUzTrainSearch(chatId), scriptRepeatTime);
 });
 
 
@@ -121,14 +121,14 @@ bot.onText(/\/status/, (msg, match) => {
     let chatId = msg.chat.id;
     console.log(chats[chatId]);
 
-    if(helper.validateCommand(msg))
+    if(validateCommand(msg))
         bot.sendMessage(msg.chat.id, chats[chatId].lastResponse || 'Scheduler is empty', helper.hideKeyboardOpts());
 });
 
 bot.onText(/\/stop/, (msg, match) => {
     let chatId = msg.chat.id;
 
-    if(!helper.validateCommand(msg))
+    if(!validateCommand(msg))
         return;
 
     // STOP PREVIOUSLY RUNNED SCRIPT
@@ -164,3 +164,18 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
             break;
     }*/
 });
+
+let validateCommand = (msg) => {
+    if(!chats.hasOwnProperty(msg.chat.id))
+        bot.sendMessage(msg.chat.id, 'To start script, please use /start command first');
+
+    return chats.hasOwnProperty(msg.chat.id);
+};
+
+let execUzTrainSearch = (chatId) => {
+    let chat = chats[chatId];
+    uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
+        result => bot.sendMessage(chatId, result),
+        error => chat.lastResponse = error
+    );
+};
