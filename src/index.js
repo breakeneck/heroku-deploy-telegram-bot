@@ -54,7 +54,7 @@ bot.onText(/\/from (.+)/, (msg, match) => {
                 scheduler.get(userId).from = response[0];
                 break;
             default:
-                bot.sendMessage(msg.from.id, 'Selected departure station from list:', helper.buttonOpts('from', response));
+                bot.sendMessage(msg.from.id, 'Selected departure station from list:', helper.buttonOpts(userId, 'from', response));
         }
     });
 });
@@ -81,7 +81,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
                 scheduler.get(userId).to = response[0];
                 break;
             default:
-                bot.sendMessage(msg.from.id, 'Selected arrival station from list:', helper.buttonOpts('to', response));
+                bot.sendMessage(userId, 'Selected arrival station from list:', helper.buttonOpts(userId, 'to', response));
         }
     });
 
@@ -157,13 +157,12 @@ bot.onText(/\/stop/, (msg, match) => {
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     scheduler.debug();
 
-    let [action, stationId, stationTitle] = callbackQuery.data.split('_');
-    let msg = callbackQuery.message;
-    let userId = msg.from.id;
+    let [userId, action, stationId, stationTitle] = callbackQuery.data.split('_');
+  /*  let msg = callbackQuery.message;
 
     console.log('USER FROM ID', userId);
     console.log('MSG', msg);
-    console.log('callbackQuery', callbackQuery);
+    console.log('callbackQuery', callbackQuery);*/
 
     scheduler.get(userId)[action] = {
         title: stationTitle,

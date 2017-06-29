@@ -13,7 +13,7 @@ exports.hideKeyboardOpts = () => {
     }
 };
 
-exports.buttonOpts = (action, uzStationsResponse) => {
+exports.buttonOpts = (userId, action, uzStationsResponse) => {
     return {
         reply_markup: {
             // resize_keyboard: true,
@@ -22,7 +22,7 @@ exports.buttonOpts = (action, uzStationsResponse) => {
                 uzStationsResponse.map((station) => {
                     return {
                         text: station.title,
-                        callback_data: [action, station.value, station.title].join('_')
+                        callback_data: [userId, action, station.value, station.title].join('_')
                     }
                 })
             ]
