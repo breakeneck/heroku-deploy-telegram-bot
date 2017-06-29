@@ -120,21 +120,10 @@ bot.onText(/\/status/, (msg, match) => {
     scheduler.debug();
 
     let userId = msg.from.id;
-    let current = scheduler.get(userId);
+    let currentScheduler = scheduler.get(userId);
 
-    if(validateCommand(msg)) {
-        let response = [];
-        if(current.from.title)
-            response.push(`From: ${current.from.title}`);
-        if(current.to && current.to.title)
-            response.push(`To: ${current.to.title}`);
-        if(current.at)
-            response.push(`At: ${current.at}`);
-        response.push('Scheduler '+(current.interval ? 'enabled' : 'not set'));
-        response.push(`Last Response ${current.lastResponse}`);
-
-        bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
-    }
+    if(validateCommand(msg))
+        sendStatus(currentScheduler);
 });
 
 bot.onText(/\/status (.+)/, (msg, match) => {
@@ -142,21 +131,10 @@ bot.onText(/\/status (.+)/, (msg, match) => {
 
     let userId = msg.from.id;
     let schedulerName = match[0];
-    let chat = scheduler.getByName(userId, schedulerName);
+    let selectedScheduler = scheduler.getByName(userId, schedulerName);
 
-    if(validateCommand(msg)) {
-        let response = [];
-        if(chat.from.title)
-            response.push(`From: ${chat.from.title}`);
-        if(chat.to.title)
-            response.push(`To: ${chat.to.title}`);
-        if(chat.at)
-            response.push(`At: ${chat.at}`);
-        response.push('Scheduler '+(chat.interval ? 'enabled' : 'not set'));
-        response.push(`Last Response ${chat.lastResponse}`);
-
-        bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
-    }
+    if(validateCommand(msg))
+        sendStatus(selectedScheduler);
 });
 
 bot.onText(/\/stop/, (msg, match) => {
@@ -214,4 +192,18 @@ let execUzTrainSearch = (userId) => {
         },
         error => scheduler.get(userId).lastResponse = error
     );
+};
+
+let sendStatus = (selectedScheduler) => {
+    let response = [];
+    if(current.from.title)
+        response.push(`From: ${current.from.title}`);
+    if(current.to && current.to.title)
+        response.push(`To: ${current.to.title}`);
+    if(current.at)
+        response.push(`At: ${current.at}`);
+    response.push('Scheduler '+(current.interval ? 'enabled' : 'not set'));
+    response.push(`Last Response ${current.lastResponse}`);
+
+    bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
 };
