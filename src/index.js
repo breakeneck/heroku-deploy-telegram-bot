@@ -143,26 +143,27 @@ bot.onText(/\/stop/, (msg, match) => {
 
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
-    console.log('callbackQuery', callbackQuery.data);
-/*
+    console.log('callbackQuery CHATS BEFORE', chats);
+
+    let [action, stationId, stationTitle] = callbackQuery.data.split('_');
     let msg = callbackQuery.message;
     let chatId = msg.chat.id;
-    let action, stationId, stationTitle;
-    [action, stationId, stationTitle] = callbackQuery.data.split('_');
 
     chats[chatId][action] = {
         title: stationTitle,
         value: stationId
     };
 
+    console.log('callbackQuery CHATS AFTER', chats);
+
     switch(action) {
         case 'from':
-            bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command');
+            bot.sendMessage(chatId, 'Departure station is selected, please, search for arrival station using /to command');
             break;
         case 'to':
-            bot.sendMessage(msg.chat.id, 'Arrival station is selected, please, add departure date using /at command');
+            bot.sendMessage(chatId, 'Arrival station is selected, please, add departure date using /at command');
             break;
-    }*/
+    }
 });
 
 let validateCommand = (msg) => {
