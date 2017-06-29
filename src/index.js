@@ -55,22 +55,9 @@ bot.onText(/\/from (.+)/, (msg, match) => {
             case 1:
                 bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command');
                 chats[chatId].from = response[0];
-                // {
-                //     text: response[0].title,
-                //     callback_data: response[0].value
-                // };
                 break;
             default:
-                bot.sendMessage(msg.chat.id, 'Selected departure station from list:', {
-                    reply_markup: JSON.stringify({
-                        inline_keyboard: response.map(station => {
-                            return {
-                                text: response[0].title,
-                                callback_data: 'from_'+response[0].value
-                            }
-                        })
-                    })
-                });
+                bot.sendMessage(msg.chat.id, 'Selected departure station from list:', buttonOpts('from', response));
         }
     });
 });
@@ -80,32 +67,24 @@ bot.onText(/\/to (.+)/, (msg, match) => {
     let chatId = msg.chat.id;
     let query = match[1];
 
+    // VALIDATION
     if(!validateCommand(msg))
         return;
-
     if(!chats[chatId].from)
         bot.sendMessage(chatId, 'Please, set up from station first using /from command');
 
+    //
     uz.stationSearch(query).then(response => {
         switch (response.length) {
             case 0:
                 bot.sendMessage(msg.chat.id, 'Nothing found, try again please /to command');
                 break;
             case 1:
-                bot.sendMessage(msg.chat.id, 'Arrival station is selected, script will check each '+Math.round(scriptRepeatTime/60000) + ' minutes');
+                bot.sendMessage(msg.chat.id, 'Arrival station is selected, please, add departure date using /at command');
                 chats[chatId].to = response[0];
                 break;
             default:
-                bot.sendMessage(msg.chat.id, 'Selected arrival station from list:', {
-                    reply_markup: JSON.stringify({
-                        inline_keyboard: response.map((station) => {
-                            return {
-                                text: station.title,
-                                callback_data: 'to_'+station.value
-                            }
-                        })
-                    })
-                });
+                bot.sendMessage(msg.chat.id, 'Selected arrival station from list:', buttonOpts('to', response));
         }
     });
 
@@ -187,4 +166,19 @@ let execUzPing = (chatId) => {
         result => bot.sendMessage(chatId, result),
         error => chat.lastResponse = error
     );
+};
+
+let buttonOpts = (action, uzStationsResponse) => {
+    return {
+        reply_markup: {
+            inline_keyboard: [
+                uzStationsResponse.map((station) => {
+                    return {
+                        text: station.title,
+                        callback_data: action + '_' + station.value
+                    }
+                })
+            ]
+        }
+    }
 };
