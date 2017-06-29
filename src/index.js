@@ -133,6 +133,7 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
     console.log('Data is ready for scheduler', chats[chatId]);
 
+    bot.sendMessage(chatId, 'Departure time is set, script will check each ' + Math.round(scriptRepeatTime/60000) + ' minutes', hideKeyboardOpts());
     // SEARCH FOR RESULT & RUN SCHEDULER
     execUzTrainSearch(chatId);
     chats[chatId].interval = setInterval(() => execUzTrainSearch(chatId), scriptRepeatTime);
@@ -141,9 +142,10 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
 bot.onText(/\/status/, (msg, match) => {
     let chatId = msg.chat.id;
+    console.log(chats[chatId]);
 
     if(validateCommand(msg))
-        bot.sendMessage(msg.chat.id, chats[chatId].lastResponse);
+        bot.sendMessage(msg.chat.id, chats[chatId].lastResponse, hideKeyboardOpts());
 });
 
 bot.onText(/\/stop/, (msg, match) => {
@@ -155,10 +157,10 @@ bot.onText(/\/stop/, (msg, match) => {
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(chats.hasOwnProperty(chatId) && chats[chatId].interval) {
         clearInterval(chats[chatId].interval);
-        bot.sendMessage(chatId, `Scheduler "${chats[chatId].from.title} - ${chats[chatId].to.title}" stopped`);
+        bot.sendMessage(chatId, `Scheduler "${chats[chatId].from.title} - ${chats[chatId].to.title}" stopped`, hideKeyboardOpts());
     }
     else
-        bot.sendMessage(chatId, 'Scheduler is not in run state');
+        bot.sendMessage(chatId, 'Scheduler is not in run state', hideKeyboardOpts());
 });
 
 
