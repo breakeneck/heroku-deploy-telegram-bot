@@ -145,7 +145,7 @@ bot.onText(/\/status/, (msg, match) => {
     console.log(chats[chatId]);
 
     if(validateCommand(msg))
-        bot.sendMessage(msg.chat.id, chats[chatId].lastResponse, hideKeyboardOpts());
+        bot.sendMessage(msg.chat.id, chats[chatId].lastResponse || 'Scheduler is empty', hideKeyboardOpts());
 });
 
 bot.onText(/\/stop/, (msg, match) => {
