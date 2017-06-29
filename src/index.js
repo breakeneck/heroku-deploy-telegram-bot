@@ -10,7 +10,7 @@ let bot;
 bot = new TelegramBot(token, { webHook: { port } });
 bot.setWebHook(url);
 
-let chats = null;
+let chats = {};
 //let interval = null;
 let scriptRepeatTime = 0.1*60*1000;
 let lastResponse = [];
@@ -21,14 +21,7 @@ console.log('Bot Started, Waiting for /start command');
 bot.onText(/\/start (.+)/, (msg, match) => {
     let chatId = msg.chat.id;
 
-    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station', {
-        reply_to_message_id: msg.message_id,
-        reply_markup: JSON.stringify({
-            keyboard: [
-                ['/from'],
-            ]
-        })
-    });
+    bot.sendMessage(chatId, 'УкрЗалізниця pinger. Use /from command to add departure station');
 
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(chats.hasOwnProperty(chatId))
