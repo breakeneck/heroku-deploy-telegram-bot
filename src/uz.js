@@ -10,33 +10,94 @@ import request from 'request';
 const SEARCH_URL = 'http://booking.uz.gov.ua/purchase/search/';
 const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/';
 
-let time = () => (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
-    .toISOString().replace('T',' ').split('.').shift();
+let moment = require('moment-timezone');
+let tz = 'Europe/Kiev';
+moment.tz.setDefault('Europe/Kiev');
 
-exports.ping = (station_from, station_till) => new Promise((resolve, reject) => {
+exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
+    new Promise((resolve, reject) => {
+        request.post(SEARCH_URL, {
+            json: true,
+            form:{
+                station_id_from,
+                station_id_till,
+                date_dep
+            }}, (e, r, body) => {
+                if(typeof body.value === 'string')
+                    reject(time() + body.value);
+                else
+                    resolve(time() + formatResponse(body));
+        });
+    });
+
+exports.searchStation = (term) =>
+    new Promise((resolve, reject) => {
+        request.get(STATION_URL, {
+            json: true,
+            qs: {
+                term
+            }}, (e, r, body) => {
+                resolve(typeof body === 'string' ? [] : body);
+        });
+    });
+
+
+// LOCAL HELPERS
+let time = () => moment().fromNow()+': ';
+
+let formatResponse = (body) => {
+    let resultArr = [];
+    body.value.forEach(value => {
+        let tickets = value.types.map(type => {
+            return type.places + ' ' + type.title;
+        }).join("\n");
+        let message = `${value.from.station} - ${value.till.station} (${value.till.src_date}) \n${tickets}`;
+        resultArr.push(time() + ' - ' + message);
+    });
+    console.log(resultArr.join("\n"));
+    return resultArr.join("\n");
+};
+
+
+
+//
+// let time = () => (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
+//     .toISOString().replace('T',' ').split('.').shift()+' - ';
+
+/*
+exports.ping = (station_id_from, station_id_till, date_dep) => new Promise((resolve, reject) => {
+    let params = {
+        // station_id_from: 2218060,
+        // station_from: 'Луцьк',
+        // station_id_till: 2210700,
+        // station_till: 'Дніпропетровськ-Голов.',
+        // station_id_till: 2200001,
+        // station_till: 'Київ',
+        date_dep: date_dep,
+        //date_dep: '12.07.2017',
+        time_dep: '00:00',
+        time_dep_till: '',
+        another_ec:	0,
+        search: ''
+    };
+
     request
         .post({
             url: SEARCH_URL,
             json: true,
             form: {
-                // station_id_from: 2218060,
-                station_from: station_from,// 'Луцьк',
-                // station_id_till: 2210700,
-                station_till: station_till, //'Дніпропетровськ-Голов.',
-                // station_id_till: 2200001,
-                // station_till: 'Київ',
-                date_dep: '12.07.2017',
-                time_dep: '00:00',
-                time_dep_till: '',
-                another_ec:	0,
-                search: ''
+                station_id_from,
+                station_id_till,
+                date_dep
             }
         }, (error, response, body) => {
+            console.log('Params', params);
+
             if(!body || typeof body === 'string')
                 return;
 
             if(typeof body.value === 'string') {
-                console.log(time() + ' - Nothing found');
+                console.log(time() + body.value);
                 reject(time() + ' - Nothing found');
             }
             else {
@@ -63,11 +124,11 @@ exports.stationSearch = (query) => new Promise((resolve, reject) => {
         }, (error, response, body) => {
             if (!body || typeof body === 'string')
                 resolve([]);
-                // reject('Error sending query');
 
             resolve(body);
         });
 });
+*/
 
 //
 // let Datastore = require('nedb');

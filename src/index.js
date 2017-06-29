@@ -12,7 +12,7 @@ bot.setWebHook(url);
 
 let chats = {};
 //let interval = null;
-let scriptRepeatTime = 0.1*60*1000;
+let scriptRepeatTime = 5*60*1000;
 let lastResponse = [];
 
 console.log('Bot Started, Waiting for /start command');
@@ -31,8 +31,9 @@ bot.onText(/\/start/, (msg, match) => {
         id: chatId,
         interval: null,
         lastResponse: '',
-        from: chats[chatId] ? chats[chatId].from : '',
-        to: chats[chatId] ? chats[chatId].to : ''
+        from: chats[chatId] ? chats[chatId].from : {},
+        to: chats[chatId] ? chats[chatId].to : {},
+        at: chats[chatId] ? chats[chatId].at : '',
     };
 });
 
@@ -41,24 +42,34 @@ bot.onText(/\/start/, (msg, match) => {
 
 bot.onText(/\/from (.+)/, (msg, match) => {
     let chatId = msg.chat.id;
+    let query = match[1];
 
     if(!validateCommand(msg))
         return;
 
-    uz.stationSearch(match[1]).then(response => {
+    uz.searchStation(query).then(response => {
         switch (response.length) {
             case 0:
                 bot.sendMessage(msg.chat.id, 'Nothing found, try again please /from command');
                 break;
             case 1:
                 bot.sendMessage(msg.chat.id, 'Departure station is selected, please, search for arrival station using /to command');
-                chats[chatId].from = match[1];
+                chats[chatId].from = response[0];
+                // {
+                //     text: response[0].title,
+                //     callback_data: response[0].value
+                // };
                 break;
             default:
                 bot.sendMessage(msg.chat.id, 'Selected departure station from list:', {
                     reply_to_message_id: msg.message_id,
                     reply_markup: JSON.stringify({
-                        keyboard: response.map((station) => ['/from '+station.title])
+                        keyboard: response.map(station => {
+                            return {
+                                text: response[0].title,
+                                callback_data: 'from_'+response[0].value
+                            }
+                        })
                     })
                 });
         }
@@ -68,6 +79,7 @@ bot.onText(/\/from (.+)/, (msg, match) => {
 
 bot.onText(/\/to (.+)/, (msg, match) => {
     let chatId = msg.chat.id;
+    let query = match[1];
 
     if(!validateCommand(msg))
         return;
@@ -75,32 +87,67 @@ bot.onText(/\/to (.+)/, (msg, match) => {
     if(!chats[chatId].from)
         bot.sendMessage(chatId, 'Please, set up from station first using /from command');
 
-    uz.stationSearch(match[1]).then(response => {
+    uz.stationSearch(query).then(response => {
         switch (response.length) {
             case 0:
                 bot.sendMessage(msg.chat.id, 'Nothing found, try again please /to command');
                 break;
             case 1:
                 bot.sendMessage(msg.chat.id, 'Arrival station is selected, script will check each '+Math.round(scriptRepeatTime/60000) + ' minutes');
-                chats[chatId].to = match[1];
-                chats[chatId].lastResponse = '';
-
-                // SEARCH FOR RESULT
-                execUzPing(chatId);
-
-                // RUN SCHEDULER
-                chats[chatId].interval = () => setInterval(() => execUzPing(chatId), scriptRepeatTime);
+                chats[chatId].to = response[0];
                 break;
             default:
                 bot.sendMessage(msg.chat.id, 'Selected arrival station from list:', {
                     reply_to_message_id: msg.message_id,
                     reply_markup: JSON.stringify({
-                        keyboard: response.map((station) => ['/to '+station.title])
+                        keyboard: response.map((station) => {
+                            return {
+                                text: station.title,
+                                callback_data: 'to_'+station.value
+                            }
+                        })
                     })
                 });
         }
     });
 
+});
+
+
+bot.on('callback_query', function onCallbackQuery(callbackQuery) {
+    let action, stationId;
+    let chatId = msg.chat.id;
+    let msg = callbackQuery.message;
+    [action, stationId] = callbackQuery.data.split('_');
+
+    chats[chatId][action] = {
+        title: callbackQuery.message,
+        value: stationId
+    };
+});
+
+
+bot.onText(/\/at (.+)/, (msg, match) => {
+    let chatId = msg.chat.id;
+    let at = match[1];
+
+    // VALIDATION
+    if(!validateCommand(msg))
+        return;
+    if(!chats[chatId].from)
+        bot.sendMessage(chatId, 'Please, set up departure station first using /from command');
+    if(!chats[chatId].to)
+        bot.sendMessage(chatId, 'Please, set up arrival station first using /to command');
+
+    // FILL IN LAST PARAMETERS
+    chats[chatId].at = at;
+    chats[chatId].lastResponse = '';
+
+    console.log('Data is ready for scheduler', chats[chatId]);
+
+    // SEARCH FOR RESULT & RUN SCHEDULER
+    execUzPing(chatId);
+    chats[chatId].interval = setInterval(() => execUzPing(chatId), scriptRepeatTime);
 });
 
 
@@ -120,7 +167,7 @@ bot.onText(/\/stop/, (msg, match) => {
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(chats.hasOwnProperty(chatId) && chats[chatId].interval) {
         clearInterval(chats[chatId].interval);
-        bot.sendMessage(chatId, `Scheduler "${chats[chatId].from} - ${chats[chatId].to}" stopped`);
+        bot.sendMessage(chatId, `Scheduler "${chats[chatId].from.title} - ${chats[chatId].to.title}" stopped`);
     }
     else
         bot.sendMessage(chatId, 'Scheduler is not in run state');
@@ -136,8 +183,10 @@ let validateCommand = (msg) => {
 };
 
 
-let execUzPing = (chatId) =>
-    uz.ping(chats[chatId].from, chats[chatId].to).then(
+let execUzPing = (chatId) => {
+    let chat = chats[chatId];
+    ping(chat.from.value, chat.to.value, chat.at).then(
         result => bot.sendMessage(chatId, result),
-        error => chats[chatId].lastResponse = error
+        error => chat.lastResponse = error
     );
+};
