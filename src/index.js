@@ -62,9 +62,8 @@ bot.onText(/\/from (.+)/, (msg, match) => {
                 break;
             default:
                 bot.sendMessage(msg.chat.id, 'Selected departure station from list:', {
-                    reply_to_message_id: msg.message_id,
                     reply_markup: JSON.stringify({
-                        keyboard: response.map(station => {
+                        inline_keyboard: response.map(station => {
                             return {
                                 text: response[0].title,
                                 callback_data: 'from_'+response[0].value
@@ -98,9 +97,8 @@ bot.onText(/\/to (.+)/, (msg, match) => {
                 break;
             default:
                 bot.sendMessage(msg.chat.id, 'Selected arrival station from list:', {
-                    reply_to_message_id: msg.message_id,
                     reply_markup: JSON.stringify({
-                        keyboard: response.map((station) => {
+                        inline_keyboard: response.map((station) => {
                             return {
                                 text: station.title,
                                 callback_data: 'to_'+station.value
