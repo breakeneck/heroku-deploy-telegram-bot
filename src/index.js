@@ -1,6 +1,7 @@
 import TelegramBot from 'node-telegram-bot-api';
 import uz from './uz';
 import helper from './helper';
+import scheduler from './scheduler';
 
 const token = process.env.TOKEN;
 const port = process.env.PORT;
@@ -8,34 +9,6 @@ const mode = process.env.NODE_ENV;
 const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
 
 const scriptRepeatTime = 5*60*1000;
-
-let _users = {}; // SEE addScheduler FOR OBJECT STRUCTURE
-let scheduler = (userId) => _users[userId].schedulers[_users[userId].currentSchedulerName];
-
-let addScheduler = (userId, schedulerName) => {
-    // STOP PREVIOUSLY RUNNED SCRIPT
-    if(_users[userId] && _users[userId].schedulers[schedulerName])
-        clearInterval(_users[userId].schedulers[schedulerName].interval);
-
-    // INIT _users OBJECT
-    if(!_users[userId])
-        _users[userId] = {
-            schedulers: {},
-            currentSchedulerName: ''
-        };
-
-    // INIT SCHEDULER OBJECT INSIDE _users
-    _users[userId].schedulers[schedulerName] = {
-        id: userId,
-        interval: null,
-        from: null,
-        to: null,
-        at: ''
-    };
-    _users[userId].currentSchedulerName = schedulerName;
-};
-let listSchedulers = (userId) => Object.keys(_users[userId].schedulers);
-let schedulerByName = (userId, schedulerName) => _users[userId].schedulers[schedulerName];
 
 console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
@@ -48,7 +21,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     let userId = msg.from.id;
     let schedulerName = match[0];
 
-    addScheduler(userId, schedulerName);
+    scheduler.add(userId, schedulerName);
 
     bot.sendMessage(userId, 'УкрЗалізниця pinger. Use /from command to add departure station', helper.hideKeyboardOpts());
 });
@@ -58,7 +31,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 bot.onText(/\/schedulers/, (msg, match) => {
     let userId = msg.from.id;
 
-    bot.sendMessage(userId, listSchedulers());
+    bot.sendMessage(userId, scheduler.list(userId));
 });
 
 
@@ -78,7 +51,7 @@ bot.onText(/\/from (.+)/, (msg, match) => {
                 break;
             case 1:
                 bot.sendMessage(msg.from.id, 'Departure station is selected, please, search for arrival station using /to command', helper.hideKeyboardOpts());
-                scheduler(userId).from = response[0];
+                scheduler.get(userId).from = response[0];
                 break;
             default:
                 bot.sendMessage(msg.from.id, 'Selected departure station from list:', helper.buttonOpts('from', response));
@@ -94,7 +67,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
     // VALIDATION
     if(!validateCommand(msg))
         return;
-    if(!scheduler(userId).from)
+    if(!scheduler.get(userId).from)
         bot.sendMessage(userId, 'Please, set up from station first using /from command');
 
     //
@@ -105,7 +78,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
                 break;
             case 1:
                 bot.sendMessage(msg.from.id, 'Arrival station is selected, please, add departure date using /at command');
-                scheduler(userId).to = response[0];
+                scheduler.get(userId).to = response[0];
                 break;
             default:
                 bot.sendMessage(msg.from.id, 'Selected arrival station from list:', helper.buttonOpts('to', response));
@@ -122,16 +95,16 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     // VALIDATION
     if(!validateCommand(msg))
         return;
-    if(!scheduler(userId).from)
+    if(!scheduler.get(userId).from)
         bot.sendMessage(userId, 'Please, set up departure station first using /from command');
-    if(!scheduler(userId).to)
+    if(!scheduler.get(userId).to)
         bot.sendMessage(userId, 'Please, set up arrival station first using /to command');
 
     // FILL IN LAST PARAMETERS
-    scheduler(userId).at = at;
-    scheduler(userId).lastResponse = '';
+    scheduler.get(userId).at = at;
+    scheduler.get(userId).lastResponse = '';
 
-    console.log('Data is ready for scheduler', scheduler(userId));
+    console.log('Data is ready for scheduler', scheduler.get(userId));
 
     bot.sendMessage(userId, 'Departure time is set, script will check each '
         + Math.round(scriptRepeatTime/60000) + ' minutes', helper.hideKeyboardOpts()
@@ -139,25 +112,25 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     );
     // SEARCH FOR RESULT & RUN SCHEDULER
     execUzTrainSearch(userId);
-    scheduler(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
+    scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
 });
 
 
 bot.onText(/\/status/, (msg, match) => {
     let userId = msg.from.id;
-    let chat = scheduler(userId);
-    console.log(chat);
+    let current = scheduler.get(userId);
+    console.log(current);
 
     if(validateCommand(msg)) {
         let response = [];
-        if(chat.from.title)
-            response.push(`From: ${chat.from.title}`);
-        if(chat.to.title)
-            response.push(`To: ${chat.to.title}`);
-        if(chat.at)
-            response.push(`At: ${chat.at}`);
-        response.push('Scheduler '+(chat.interval ? 'enabled' : 'not set'));
-        response.push(`Last Response ${chat.lastResponse}`);
+        if(current.from.title)
+            response.push(`From: ${current.from.title}`);
+        if(current.to.title)
+            response.push(`To: ${current.to.title}`);
+        if(current.at)
+            response.push(`At: ${current.at}`);
+        response.push('Scheduler '+(current.interval ? 'enabled' : 'not set'));
+        response.push(`Last Response ${current.lastResponse}`);
 
         bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
     }
@@ -166,7 +139,7 @@ bot.onText(/\/status/, (msg, match) => {
 bot.onText(/\/status (.+)/, (msg, match) => {
     let userId = msg.from.id;
     let schedulerName = match[0];
-    let chat = schedulerByName(userId, schedulerName);
+    let chat = scheduler.getByName(userId, schedulerName);
     console.log(chat);
 
     if(validateCommand(msg)) {
@@ -191,9 +164,9 @@ bot.onText(/\/stop/, (msg, match) => {
         return;
 
     // STOP PREVIOUSLY RUNNED SCRIPT
-    if(scheduler(userId) && scheduler(userId).interval) {
-        clearInterval(scheduler(userId).interval);
-        bot.sendMessage(userId, `Scheduler "${scheduler(userId).from.title} - ${scheduler(userId).to.title}" stopped`, helper.hideKeyboardOpts());
+    if(scheduler.get(userId) && scheduler.get(userId).interval) {
+        clearInterval(scheduler.get(userId).interval);
+        bot.sendMessage(userId, `Scheduler "${scheduler.get(userId).from.title} - ${scheduler.get(userId).to.title}" stopped`, helper.hideKeyboardOpts());
     }
     else
         bot.sendMessage(userId, 'Scheduler is not in run state', helper.hideKeyboardOpts());
@@ -207,7 +180,7 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     let msg = callbackQuery.message;
     let userId = msg.from.id;
 
-    scheduler(userId)[action] = {
+    scheduler.get(userId)[action] = {
         title: stationTitle,
         value: stationId
     };
@@ -224,18 +197,18 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
 
 let validateCommand = (msg) => {
     let userId = msg.from.id;
-    if(!scheduler(userId))
+    if(!scheduler.get(userId))
         bot.sendMessage(msg.from.id, 'To start script, please use "/start {schedulerName}" command first');
 
-    return scheduler(userId);
+    return scheduler.get(userId);
 };
 
 let execUzTrainSearch = (userId) => {
     uz.searchTrain(chat.from.value, chat.to.value, chat.at).then(
         result => {
-            scheduler(userId).lastResponse = result;
+            scheduler.get(userId).lastResponse = result;
             bot.sendMessage(userId, result)
         },
-        error => scheduler(userId).lastResponse = error
+        error => scheduler.get(userId).lastResponse = error
     );
 };
