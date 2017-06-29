@@ -8,21 +8,21 @@
 import request from 'request';
 
 const SEARCH_URL = 'http://booking.uz.gov.ua/purchase/search/';
-//const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/?term=';
+const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/';
 
 let time = () => (new Date(Date.now() - (new Date()).getTimezoneOffset() * 60000))
     .toISOString().replace('T',' ').split('.').shift();
 
-exports.ping = () => new Promise((resolve, reject) => {
+exports.ping = (station_from, station_till) => new Promise((resolve, reject) => {
     request
         .post({
             url: SEARCH_URL,
             json: true,
             form: {
                 // station_id_from: 2218060,
-                station_from: 'Луцьк',
+                station_from: station_from,// 'Луцьк',
                 // station_id_till: 2210700,
-                station_till: 'Дніпропетровськ-Голов.',
+                station_till: station_till, //'Дніпропетровськ-Голов.',
                 // station_id_till: 2200001,
                 // station_till: 'Київ',
                 date_dep: '12.07.2017',
@@ -54,6 +54,20 @@ exports.ping = () => new Promise((resolve, reject) => {
         });
 });
 
+exports.stationSearch = (query) => new Promise((resolve, reject) => {
+    request
+        .get({
+            url: STATION_URL,
+            json: true,
+            qs: {term: query}
+        }, (error, response, body) => {
+            if (!body || typeof body === 'string')
+                resolve([]);
+                // reject('Error sending query');
+
+            resolve(body);
+        });
+});
 
 //
 // let Datastore = require('nedb');
