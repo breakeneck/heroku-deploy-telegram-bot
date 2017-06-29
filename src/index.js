@@ -123,7 +123,7 @@ bot.onText(/\/status/, (msg, match) => {
     let currentScheduler = scheduler.get(userId);
 
     if(validateCommand(msg))
-        sendStatus(currentScheduler);
+        sendStatus(userId, currentScheduler);
 });
 
 bot.onText(/\/status (.+)/, (msg, match) => {
@@ -134,7 +134,7 @@ bot.onText(/\/status (.+)/, (msg, match) => {
     let selectedScheduler = scheduler.getByName(userId, schedulerName);
 
     if(validateCommand(msg))
-        sendStatus(selectedScheduler);
+        sendStatus(userId, selectedScheduler);
 });
 
 bot.onText(/\/stop/, (msg, match) => {
@@ -194,7 +194,7 @@ let execUzTrainSearch = (userId) => {
     );
 };
 
-let sendStatus = (currentScheduler) => {
+let sendStatus = (userId, currentScheduler) => {
     let response = [];
     if(currentScheduler.from.title)
         response.push(`From: ${currentScheduler.from.title}`);
@@ -205,5 +205,5 @@ let sendStatus = (currentScheduler) => {
     response.push('Scheduler '+(currentScheduler.interval ? 'enabled' : 'not set'));
     response.push(`Last Response ${currentScheduler.lastResponse}`);
 
-    bot.sendMessage(msg.from.id, response.join("\n"), helper.hideKeyboardOpts());
+    bot.sendMessage(userId, response.join("\n"), helper.hideKeyboardOpts());
 };
