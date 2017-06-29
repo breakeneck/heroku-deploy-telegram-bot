@@ -92,7 +92,7 @@ bot.onText(/\/to (.+)/, (msg, match) => {
 
 
 bot.on('callback_query', function onCallbackQuery(callbackQuery) {
-    console.log(callbackQuery);
+    console.log(callbackQuery.data);
 
     let msg = callbackQuery.message;
     let chatId = msg.chat.id;
