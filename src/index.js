@@ -19,7 +19,7 @@ bot.setWebHook(url);
 // RUNNING BOT
 bot.onText(/\/start (.+)/, (msg, match) => {
     let userId = msg.from.id;
-    let schedulerName = match[0];
+    let schedulerName = match[1];
 
     scheduler.add(userId, schedulerName);
 
@@ -160,6 +160,9 @@ bot.on('callback_query', function onCallbackQuery(callbackQuery) {
     let [action, stationId, stationTitle] = callbackQuery.data.split('_');
     let msg = callbackQuery.message;
     let userId = msg.from.id;
+
+    console.log('USER FROM ID', userId);
+    console.log('MSG', msg);
 
     scheduler.get(userId)[action] = {
         title: stationTitle,
