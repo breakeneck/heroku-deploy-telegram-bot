@@ -29,6 +29,8 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 
 // RUNNING BOT
 bot.onText(/\/schedulers/, (msg, match) => {
+    scheduler.debug();
+
     let userId = msg.from.id;
 
     if(!validateCommand(msg))
@@ -126,7 +128,7 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
 
 bot.onText(/\/status/, (msg, match) => {
-    scheduler.debug();
+    scheduler.debug(userId);
 
     let userId = msg.from.id;
     let currentScheduler = scheduler.get(userId);
@@ -147,8 +149,6 @@ bot.onText(/\/status (.+)/, (msg, match) => {
 });
 
 bot.onText(/\/switch (.+)/, (msg, match) => {
-    scheduler.debug();
-
     let userId = msg.from.id;
     let schedulerName = match[0];
 
@@ -169,6 +169,7 @@ bot.onText(/\/stop/, (msg, match) => {
     // STOP PREVIOUSLY RUNNED SCRIPT
     if(scheduler.get(userId) && scheduler.get(userId).interval) {
         clearInterval(scheduler.get(userId).interval);
+        scheduler.get(userId).interval = null;
         bot.sendMessage(userId, `Scheduler "${scheduler.get(userId).from.title} - ${scheduler.get(userId).to.title}" stopped`, helper.hideKeyboardOpts());
     }
     else

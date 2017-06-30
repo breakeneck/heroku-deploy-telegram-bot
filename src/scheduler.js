@@ -50,8 +50,12 @@ let get = (userId) =>
     _users[userId].schedulers[_users[userId].currentSchedulerName];
 exports.get = get;
 
-exports.debug = () =>
-    console.log(_users);
+exports.debug = (chatId) => {
+    if (chatId && _users[chatId])
+        console.log(get(userId));
+    else
+        console.log(_users);
+};
 
 exports.trainTitle = (userId) =>
     // `${scheduler.get(userId).from.title} - ${scheduler.get(userId).to.title} at ${scheduler.get(userId).at}`
