@@ -31,7 +31,15 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 bot.onText(/\/schedulers/, (msg, match) => {
     let userId = msg.from.id;
 
-    bot.sendMessage(userId, scheduler.list(userId).join("/n"));
+    bot.sendMessage(msg.chat.id, 'Please select scheduler', {
+        reply_to_message_id: msg.message_id,
+        reply_markup: JSON.stringify({
+            keyboard: scheduler.list(userId).map(
+                name =>
+                    ['/switch '+name]
+            )
+        })
+    });
 });
 
 
@@ -200,12 +208,12 @@ let execUzTrainSearch = (userId) => {
             scheduler.get(userId).lastResponse = result;
             bot.sendMessage(userId, result);
 
-            console.log(`Searching for train ${scheduler.trainTitle(userId)}: result`);
+            console.log(`Searching for train ${scheduler.trainTitle(userId)}: ${result}`);
         },
         error => {
             scheduler.get(userId).lastResponse = error;
 
-            console.log(`Searching for train ${scheduler.trainTitle(userId)}: error`);
+            console.log(`Searching for train ${scheduler.trainTitle(userId)}: ${error}`);
         }
     );
 };
