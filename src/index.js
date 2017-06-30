@@ -141,7 +141,7 @@ bot.onText(/\/status (.+)/, (msg, match) => {
     scheduler.debug();
 
     let userId = msg.from.id;
-    let schedulerName = match[0];
+    let schedulerName = match[1];
     let selectedScheduler = scheduler.getByName(userId, schedulerName);
 
     if(validateCommand(msg))
@@ -150,7 +150,7 @@ bot.onText(/\/status (.+)/, (msg, match) => {
 
 bot.onText(/\/switch (.+)/, (msg, match) => {
     let userId = msg.from.id;
-    let schedulerName = match[0];
+    let schedulerName = match[1];
 
     if(validateCommand(msg)){
         if(scheduler.switch(userId, schedulerName))
