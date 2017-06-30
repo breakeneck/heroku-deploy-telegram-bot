@@ -122,7 +122,7 @@ bot.onText(/\/at (.+)/, (msg, match) => {
         helper.hideKeyboardOpts()
     );
     // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzTrainSearch(userId);
+    execUzTrainSearch(userId, true);
     scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
 });
 
@@ -206,7 +206,7 @@ let validateCommand = (msg) => {
     return scheduler.get(userId);
 };
 
-let execUzTrainSearch = (userId) => {
+let execUzTrainSearch = (userId, returnResultImmediately) => {
     uz.searchTrain(scheduler.get(userId).from.value, scheduler.get(userId).to.value, scheduler.get(userId).at).then(
         result => {
             scheduler.get(userId).lastResponse = result;
@@ -216,6 +216,9 @@ let execUzTrainSearch = (userId) => {
         },
         error => {
             scheduler.get(userId).lastResponse = error;
+
+            if(returnResultImmediately)
+                bot.sendMessage(userId, result);
 
             console.log(`Searching for train ${scheduler.trainTitle(userId)}: ${error}`);
         }
