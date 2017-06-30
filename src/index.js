@@ -198,9 +198,15 @@ let execUzTrainSearch = (userId) => {
     uz.searchTrain(scheduler.get(userId).from.value, scheduler.get(userId).to.value, scheduler.get(userId).at).then(
         result => {
             scheduler.get(userId).lastResponse = result;
-            bot.sendMessage(userId, result)
+            bot.sendMessage(userId, result);
+
+            console.log(`Searching for train ${scheduler.trainTitle(userId)}: result`);
         },
-        error => scheduler.get(userId).lastResponse = error
+        error => {
+            scheduler.get(userId).lastResponse = error;
+
+            console.log(`Searching for train ${scheduler.trainTitle(userId)}: error`);
+        }
     );
 };
 

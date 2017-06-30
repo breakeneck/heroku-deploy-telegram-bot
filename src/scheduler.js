@@ -46,8 +46,13 @@ exports.getByName = (userId, schedulerName) =>
     _users[userId].schedulers[schedulerName];
 
 
-exports.get = (userId) =>
+let get = (userId) =>
     _users[userId].schedulers[_users[userId].currentSchedulerName];
+exports.get = get;
 
 exports.debug = () =>
     console.log(_users);
+
+exports.trainTitle = (userId) =>
+    // `${scheduler.get(userId).from.title} - ${scheduler.get(userId).to.title} at ${scheduler.get(userId).at}`
+    `${get(userId).from.title} - ${get(userId).to.title} at ${get(userId).at}`;
