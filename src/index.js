@@ -31,10 +31,8 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 bot.onText(/\/schedulers/, (msg, match) => {
     let userId = msg.from.id;
 
-    bot.sendMessage(userId, scheduler.list(userId));
+    bot.sendMessage(userId, scheduler.list(userId).join("/n"));
 });
-
-
 
 
 bot.onText(/\/from (.+)/, (msg, match) => {
@@ -70,7 +68,6 @@ bot.onText(/\/to (.+)/, (msg, match) => {
     if(!scheduler.get(userId).from)
         bot.sendMessage(userId, 'Please, set up from station first using /from command');
 
-    //
     uz.searchStation(query).then(response => {
         switch (response.length) {
             case 0:
@@ -136,6 +133,20 @@ bot.onText(/\/status (.+)/, (msg, match) => {
 
     if(validateCommand(msg))
         sendStatus(userId, selectedScheduler);
+});
+
+bot.onText(/\/switch (.+)/, (msg, match) => {
+    scheduler.debug();
+
+    let userId = msg.from.id;
+    let schedulerName = match[0];
+
+    if(validateCommand(msg)){
+        if(scheduler.switch(userId, schedulerName))
+            bot.sendMessage(userId, `Active Scheduler is switched to "${schedulerName}"`);
+        else
+            bot.sendMessage(userId, `Scheduler "${schedulerName}" not exists`);
+    }
 });
 
 bot.onText(/\/stop/, (msg, match) => {

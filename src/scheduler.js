@@ -30,6 +30,14 @@ exports.add = (userId, schedulerName) => {
 };
 
 
+exports.switch = (userId, schedulerName) => {
+    if (_users[userId] && _users[userId].schedulers[schedulerName])
+        return _users[userId].currentSchedulerName = schedulerName;
+    else
+        return false;
+};
+
+
 exports.list = (userId) =>
     Object.keys(_users[userId].schedulers);
 
