@@ -31,6 +31,9 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 bot.onText(/\/schedulers/, (msg, match) => {
     let userId = msg.from.id;
 
+    if(!validateCommand(msg))
+        return;
+
     bot.sendMessage(msg.chat.id, 'Please select scheduler', {
         reply_to_message_id: msg.message_id,
         reply_markup: JSON.stringify({
