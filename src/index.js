@@ -151,9 +151,9 @@ bot.onText(/\/switch (.+)/, (msg, match) => {
 
     if(validateCommand(msg)){
         if(scheduler.switch(userId, schedulerName))
-            bot.sendMessage(userId, `Active Scheduler is switched to "${schedulerName}"`);
+            bot.sendMessage(userId, `Active Scheduler is switched to "${schedulerName}"`, helper.hideKeyboardOpts());
         else
-            bot.sendMessage(userId, `Scheduler "${schedulerName}" not exists`);
+            bot.sendMessage(userId, `Scheduler "${schedulerName}" not exists`, helper.hideKeyboardOpts());
     }
 });
 
