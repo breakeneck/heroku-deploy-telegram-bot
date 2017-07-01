@@ -23,7 +23,7 @@ let date_dep = '30.07.2017';
 //     .then(response => {
 //         console.log(helper.buttonOpts('from', response).reply_markup.keyboard);
 //     });
-
+/*
 
 let chats = {};
 let chatId = 123;
@@ -53,3 +53,22 @@ else
 
 console.log(chats);
 
+*/
+
+let obj = {
+    items: {
+        one: {
+            interval: null
+        },
+
+        two: {
+            interval: null
+        }
+    }
+};
+
+
+obj.items.one = setInterval(() => runme(123), 1000);
+obj.items.two = setInterval(() => runme(555), 1000);
+
+let runme = (params) => console.log(params);
