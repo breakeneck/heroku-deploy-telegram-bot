@@ -142,6 +142,21 @@ bot.onText(/\/status/, (msg, match) => {
         sendStatus(userId, currentScheduler);
 });
 
+bot.onText(/\/delete/, (msg, match) => {
+    let userId = msg.from.id;
+
+    if(validateCommand(msg)) {
+        if(scheduler.get(userId) && scheduler.get(userId).interval) {
+            clearInterval(scheduler.get(userId).interval);
+            scheduler.get(userId).interval = null;
+            bot.sendMessage(userId, 'Scheduler is stopped');
+        }
+
+        scheduler.delete(userId);
+        bot.sendMessage(userId, 'Current scheduler, please check available with /schedulers');
+    }
+});
+
 bot.onText(/\/status (.+)/, (msg, match) => {
     scheduler.debug();
 

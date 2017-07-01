@@ -46,6 +46,9 @@ exports.saveAll = () => {
 exports.count = () =>
     Object.keys(_users).length;
 
+exports.delete = () =>
+    Object.keys(_users).length;
+
 
 exports.switch = (userId, schedulerName) => {
     if (_users[userId] && _users[userId].schedulers[schedulerName])
