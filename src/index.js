@@ -4,24 +4,22 @@ import helper from './helper';
 import scheduler from './scheduler';
 const fs = require('fs');
 
-const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
-
-// const token = process.env.TOKEN;
-// const port = process.env.PORT;
-// const mode = process.env.NODE_ENV;
-// const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
-
 const scriptRepeatTime = 5*60*1000;
 
-console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
+
+
+console.log('App started');
 
 let bot;
+const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
 bot = new TelegramBot(token, {polling: true});
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
 
-// RUNNING BOT
+console.log('Bot Started, Waiting for "/start {schedulerName}" command');
+
+// BOT COMMANDS
 bot.onText(/\/restore/, (msg, match) => {
     scheduler.loadAll();
 
