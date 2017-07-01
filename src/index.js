@@ -7,8 +7,6 @@ const fs = require('fs');
 const scriptRepeatTime = 5*60*1000;
 
 
-
-
 console.log('App started');
 
 let bot;
