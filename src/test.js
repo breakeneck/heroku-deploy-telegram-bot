@@ -4,6 +4,13 @@
  * @date: 29.06.2017
  */
 
+
+
+import scheduler from './scheduler';
+
+
+
+
 /*
 import uz from './uz';
 import helper from './helper';
@@ -57,7 +64,7 @@ else
 
 console.log(chats);
 */
-
+/*
 let obj = {
     items: {
         one: {
@@ -75,3 +82,4 @@ obj.items.one = setInterval(() => runme(123), 1000);
 obj.items.two = setInterval(() => runme(555), 1000);
 
 let runme = (params) => console.log(params);
+    */
