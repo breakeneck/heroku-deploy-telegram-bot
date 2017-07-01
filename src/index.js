@@ -4,7 +4,7 @@ import helper from './helper';
 import scheduler from './scheduler';
 const fs = require('fs');
 
-const scriptRepeatTime = 0.2*60*1000; // yopgogogo
+const scriptRepeatTime = 0.2*60*1000; // BALLAS
 
 
 console.log('App started');
