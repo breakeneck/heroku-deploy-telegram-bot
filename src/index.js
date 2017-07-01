@@ -4,8 +4,8 @@ import helper from './helper';
 import scheduler from './scheduler';
 
 const token = process.env.TOKEN;
-const port = process.env.PORT;
-const mode = process.env.NODE_ENV;
+// const port = process.env.PORT;
+// const mode = process.env.NODE_ENV;
 const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
 
 const scriptRepeatTime = 5*60*1000;
