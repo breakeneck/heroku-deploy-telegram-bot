@@ -15,7 +15,11 @@ bot = new TelegramBot(token, {polling: true});
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
 
+if(fs.existsSync('./db/data.json'))
+    scheduler.loadAll();
+
 console.log('Bot Started, Waiting for "/start {schedulerName}" command');
+
 
 // BOT COMMANDS
 bot.onText(/\/restore/, (msg, match) => {
@@ -183,7 +187,7 @@ bot.onText(/\/run/, (msg, match) => {
     if(!validateCommand(msg))
         return;
 
-    // STOP PREVIOUSLY RUNNED SCRIPT
+    // RUN SCRIPT
     if(scheduler.get(userId) && !scheduler.get(userId).interval)
         runScheduler(userId);
     else
