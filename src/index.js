@@ -14,8 +14,9 @@ console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
 
 let bot;
-bot = new TelegramBot(token, { webHook: { port } });
-bot.setWebHook(url);
+// bot = new TelegramBot(token, { webHook: { port } });
+// bot.setWebHook(url);
+bot = new TelegramBot(token, {polling: true});
 // RUNNING BOT
 bot.onText(/\/start (.+)/, (msg, match) => {
     let userId = msg.from.id;
@@ -154,7 +155,7 @@ bot.onText(/\/switch (.+)/, (msg, match) => {
 
     if(validateCommand(msg)){
         if(scheduler.switch(userId, schedulerName))
-            bot.sendMessage(userId, `Active Scheduler is switched to "${schedulerName}"`, helper.hideKeyboardOpts());
+            bot.sendMessage(userId, `Active Scheduler is switched to "${schedulerName}". You can check its /status`, helper.hideKeyboardOpts());
         else
             bot.sendMessage(userId, `Scheduler "${schedulerName}" not exists`, helper.hideKeyboardOpts());
     }
