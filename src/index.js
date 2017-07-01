@@ -14,9 +14,17 @@ console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
 
 let bot;
+bot = new TelegramBot(token, {polling: true});
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
-bot = new TelegramBot(token, {polling: true});
+
+// RUNNING BOT
+bot.onText(/\/restore/, (msg, match) => {
+    scheduler.loadAll();
+
+    bot.sendMessage(userId, scheduler.count);
+});
+
 // RUNNING BOT
 bot.onText(/\/start (.+)/, (msg, match) => {
     let userId = msg.from.id;
@@ -113,18 +121,11 @@ bot.onText(/\/at (.+)/, (msg, match) => {
 
     // FILL IN LAST PARAMETERS
     scheduler.get(userId).at = at;
-    scheduler.get(userId).lastResponse = '';
 
-    console.log('Data is ready for scheduler', scheduler.get(userId));
+    // SAVE SCHEDULERS TO FILE
+    scheduler.saveAll();
 
-    bot.sendMessage(userId, 'Departure time is set, script will check each '
-            + Math.round(scriptRepeatTime/60000) + ' minutes'
-            + '. Check /schedulers command to view all schedulers',
-        helper.hideKeyboardOpts()
-    );
-    // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzTrainSearch(userId, true);
-    scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
+    runScheduler(userId);
 });
 
 
@@ -175,6 +176,19 @@ bot.onText(/\/stop/, (msg, match) => {
     }
     else
         bot.sendMessage(userId, 'Scheduler is not in run state', helper.hideKeyboardOpts());
+});
+
+bot.onText(/\/run/, (msg, match) => {
+    let userId = msg.from.id;
+
+    if(!validateCommand(msg))
+        return;
+
+    // STOP PREVIOUSLY RUNNED SCRIPT
+    if(scheduler.get(userId) && !scheduler.get(userId).interval)
+        runScheduler(userId);
+    else
+        bot.sendMessage(userId, 'Scheduler was already in run state');
 });
 
 
@@ -238,4 +252,23 @@ let sendStatus = (userId, currentScheduler) => {
     response.push(`Last Response ${currentScheduler.lastResponse}`);
 
     bot.sendMessage(userId, response.join("\n"), helper.hideKeyboardOpts());
+};
+
+let runAll = (userId) => {
+
+};
+
+let runScheduler = (userId) => {
+    scheduler.get(userId).lastResponse = '';
+
+    console.log('Data is ready for scheduler', scheduler.get(userId));
+
+    bot.sendMessage(userId, 'Departure time is set, script will check each '
+        + Math.round(scriptRepeatTime/60000) + ' minutes'
+        + '. Check /schedulers command to view all schedulers',
+        helper.hideKeyboardOpts()
+    );
+    // SEARCH FOR RESULT & RUN SCHEDULER
+    execUzTrainSearch(userId, true);
+    scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
 };

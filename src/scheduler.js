@@ -4,6 +4,9 @@
  * @date: 29.06.2017
  */
 
+
+const fs = require('fs');
+
 let _users = {}; // SEE addScheduler FOR OBJECT STRUCTURE
 
 exports.add = (userId, schedulerName) => {
@@ -28,6 +31,20 @@ exports.add = (userId, schedulerName) => {
     };
     _users[userId].currentSchedulerName = schedulerName;
 };
+
+exports.loadAll = () => {
+    _users = JSON.parse(fs.readFileSync('./db/data.json'));
+    for(let userId in _users)
+        if(_users[userId].schedulers && _users[userId].schedulers.interval)
+            _users[userId].schedulers.interval = null;
+};
+
+exports.saveAll = () => {
+    fs.writeFile('./db/data.json', JSON.stringify(_users) , 'utf-8');
+};
+
+exports.count = () =>
+    Object.keys(_users).length;
 
 
 exports.switch = (userId, schedulerName) => {
@@ -60,3 +77,29 @@ exports.debug = (chatId) => {
 exports.trainTitle = (userId) =>
     // `${scheduler.get(userId).from.title} - ${scheduler.get(userId).to.title} at ${scheduler.get(userId).at}`
     `${get(userId).from.title} - ${get(userId).to.title} at ${get(userId).at}`;
+
+
+
+
+
+/*
+
+ /*
+ let Datastore = require('nedb');
+ let db = new Datastore({ filename: 'db/users.nedb' });
+ db.loadDatabase(err => err ? console.error('DB LOAD ERROR '+err) : '');
+
+
+ exports.save = (userId) => {
+ let self = get(userId);
+
+
+ if(db.find({id: userId}))
+ db.insert({
+ id: userId,
+ interval: null,
+ from: {},
+ to: {},
+ at: ''
+ });
+ };*/
