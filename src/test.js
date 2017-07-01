@@ -4,7 +4,7 @@
  * @date: 29.06.2017
  */
 
-
+/*
 import uz from './uz';
 import helper from './helper';
 
@@ -12,6 +12,10 @@ let term = 'луц';
 let station_id_from = '2218060';
 let station_id_till = '2218400';
 let date_dep = '30.07.2017';
+*/
+
+
+
 
 // uz.searchTrain(station_id_from, station_id_till, date_dep)
 //     .then(response => {
