@@ -2,11 +2,14 @@ import TelegramBot from 'node-telegram-bot-api';
 import uz from './uz';
 import helper from './helper';
 import scheduler from './scheduler';
+const fs = require('fs');
 
-const token = process.env.TOKEN;
+const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
+
+// const token = process.env.TOKEN;
 // const port = process.env.PORT;
 // const mode = process.env.NODE_ENV;
-const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
+// const url = `https://${process.env.HEROKU_NAME}.herokuapp.com/bot${token}`;
 
 const scriptRepeatTime = 5*60*1000;
 
