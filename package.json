@@ -4,6 +4,7 @@
   "description": "uz.gov Telegram Bot",
   "main": "index.js",
   "dependencies": {
+    "agenda": "^0.9.1",
     "axios": "^0.16.2",
     "babel": "^6.5.2",
     "babel-cli": "^6.24.1",
@@ -23,7 +24,8 @@
     "node-es6": "^0.3.1",
     "node-telegram-bot-api": "^0.22.0",
     "querystring": "^0.2.0",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "timeplan": "^1.0.0"
   },
   "devDependencies": {},
   "scripts": {
