@@ -3,7 +3,7 @@ import uz from './uz';
 import helper from './helper';
 import scheduler from './scheduler';
 const fs = require('fs');
-let timeplan = require("timeplan")
+// let timeplan = require("timeplan")
 
 const scriptRepeatTime = 2*60*1000;
 
@@ -283,18 +283,18 @@ let runScheduler = (userId) => {
     console.log('Data is ready for scheduler', scheduler.get(userId));
 
     bot.sendMessage(userId, 'Departure time is set, script will check each '
-        // + Math.round(scriptRepeatTime/60000) + ' minutes'
-        + '3 minutes'
+        + Math.round(scriptRepeatTime/60000) + ' minutes'
+        // + '3 minutes'
         + '. Check /schedulers command to view all schedulers',
         helper.hideKeyboardOpts()
     );
     // SEARCH FOR RESULT & RUN SCHEDULER
     execUzTrainSearch(userId, true);
-    timeplan.repeat({
-        period: "1m",
-        task: () => execUzTrainSearch(userId, true)
-    });
-    console.log('Added task to timeplan')
+    // timeplan.repeat({
+    //     period: "1m",
+    //     task: () => execUzTrainSearch(userId, true)
+    // });
+    // console.log('Added task to timeplan')
 
-    // scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
+    scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
 };
