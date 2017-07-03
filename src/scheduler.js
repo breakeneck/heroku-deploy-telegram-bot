@@ -38,7 +38,10 @@ exports.loadAll = (callback) => {
         if (_users[userId].schedulers) {
             for (let schedulerName in _users[userId].schedulers) {
                 let obj = _users[userId].schedulers[schedulerName];
-                obj.interval = callback.call(this, obj);
+                if(typeof callback == 'function')
+                    obj.interval = callback.call(this, obj);
+                else
+                    console.error('Callback for '+schedulerName+ ' is not a function')
             }
         }
     }
