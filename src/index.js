@@ -13,22 +13,40 @@ console.log('App started');
 let bot;
 const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
 bot = new TelegramBot(token, {polling: true});
+
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
 
-if(fs.existsSync('./db/data.json')) {
+let runScheduler = (schedulerObject) => {
+    let userId = schedulerObject.id;
+    schedulerObject.lastResponse = '';
+
+    console.log('Data is ready for scheduler', schedulerObject);
+
+    bot.sendMessage(userId, 'Departure time is set, script will check each '
+        + Math.round(scriptRepeatTime/60000) + ' minutes'
+        // + '3 minutes'
+        + '. Check /schedulers command to view all schedulers',
+        helper.hideKeyboardOpts()
+    );
+
+    // SEARCH FOR RESULT & RUN SCHEDULER
+    execUzTrainSearch(schedulerObject, true);
+    schedulerObject.interval = setInterval(execUzTrainSearch(schedulerObject), scriptRepeatTime);
+};
+
+if(fs.existsSync('./db/data.json'))
     scheduler.loadAll(runScheduler);
-}
 
 console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
-
+/*
 // BOT COMMANDS
 bot.onText(/\/restore/, (msg, match) => {
     scheduler.loadAll();
 
     bot.sendMessage(userId, 'Restored from db ' + scheduler.count()+ ' schedulers');
-});
+});*/
 
 // RUNNING BOT
 bot.onText(/\/start (.+)/, (msg, match) => {
@@ -278,27 +296,4 @@ let sendStatus = (userId, currentScheduler) => {
 
 let runAll = (userId) => {
     //todo
-};
-
-let runScheduler = (schedulerObject) => {
-    let userId = schedulerObject.id;
-    schedulerObject.lastResponse = '';
-
-    console.log('Data is ready for scheduler', schedulerObject);
-
-    bot.sendMessage(userId, 'Departure time is set, script will check each '
-        + Math.round(scriptRepeatTime/60000) + ' minutes'
-        // + '3 minutes'
-        + '. Check /schedulers command to view all schedulers',
-        helper.hideKeyboardOpts()
-    );
-    // timeplan.repeat({
-    //     period: "1m",
-    //     task: () => execUzTrainSearch(userId, true)
-    // });
-    // console.log('Added task to timeplan')
-
-    // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzTrainSearch(schedulerObject, true);
-    schedulerObject.interval = setInterval(execUzTrainSearch(schedulerObject), scriptRepeatTime);
 };
