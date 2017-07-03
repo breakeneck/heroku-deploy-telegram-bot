@@ -17,24 +17,6 @@ bot = new TelegramBot(token, {polling: true});
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
 
-let runScheduler = (schedulerObject) => {
-    let userId = schedulerObject.id;
-    schedulerObject.lastResponse = '';
-
-    console.log('Data is ready for scheduler', schedulerObject);
-
-    bot.sendMessage(userId, 'Departure time is set, script will check each '
-        + Math.round(scriptRepeatTime/60000) + ' minutes'
-        // + '3 minutes'
-        + '. Check /schedulers command to view all schedulers',
-        helper.hideKeyboardOpts()
-    );
-
-    // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzTrainSearch(schedulerObject, true);
-    schedulerObject.interval = setInterval(execUzTrainSearch(schedulerObject), scriptRepeatTime);
-};
-
 if(fs.existsSync('./db/data.json'))
     scheduler.loadAll(runScheduler);
 
@@ -259,7 +241,7 @@ let validateCommand = (msg) => {
     return scheduler.get(userId);
 };
 
-let execUzTrainSearch = (schedulerObject, returnResultImmediately) => {
+function execUzTrainSearch (schedulerObject, returnResultImmediately) {
     let userId = schedulerObject.id;
 
     uz.searchTrain(schedulerObject.from.value, schedulerObject.to.value, schedulerObject.at).then(
@@ -278,7 +260,7 @@ let execUzTrainSearch = (schedulerObject, returnResultImmediately) => {
             console.log(`Searching for train ${scheduler.trainTitle(userId)}: ${error}`);
         }
     );
-};
+}
 
 let sendStatus = (userId, currentScheduler) => {
     let response = [];
@@ -294,6 +276,20 @@ let sendStatus = (userId, currentScheduler) => {
     bot.sendMessage(userId, response.join("\n"), helper.hideKeyboardOpts());
 };
 
-let runAll = (userId) => {
-    //todo
-};
+function runScheduler (schedulerObject) {
+    let userId = schedulerObject.id;
+    schedulerObject.lastResponse = '';
+
+    console.log('Data is ready for scheduler', schedulerObject);
+
+    bot.sendMessage(userId, 'Departure time is set, script will check each '
+        + Math.round(scriptRepeatTime/60000) + ' minutes'
+        // + '3 minutes'
+        + '. Check /schedulers command to view all schedulers',
+        helper.hideKeyboardOpts()
+    );
+
+    // SEARCH FOR RESULT & RUN SCHEDULER
+    execUzTrainSearch(schedulerObject, true);
+    schedulerObject.interval = setInterval(execUzTrainSearch(schedulerObject), scriptRepeatTime);
+}
