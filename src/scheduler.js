@@ -32,11 +32,16 @@ exports.add = (userId, schedulerName) => {
     _users[userId].currentSchedulerName = schedulerName;
 };
 
-exports.loadAll = () => {
+exports.loadAll = (callback) => {
     _users = JSON.parse(fs.readFileSync('./db/data.json'));
-    for(let userId in _users)
-        if(_users[userId].schedulers && _users[userId].schedulers.interval)
-            _users[userId].schedulers.interval = null;
+    for(let userId in _users) {
+        if (_users[userId].schedulers) {
+            for (let schedulerName in _users[userId].schedulers) {
+                let obj = _users[userId].schedulers[schedulerName];
+                obj.interval = callback.call(this, obj);
+            }
+        }
+    }
 };
 
 exports.saveAll = () => {

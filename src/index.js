@@ -16,8 +16,9 @@ bot = new TelegramBot(token, {polling: true});
 // bot = new TelegramBot(token, { webHook: { port } });
 // bot.setWebHook(url);
 
-if(fs.existsSync('./db/data.json'))
-    scheduler.loadAll();
+if(fs.existsSync('./db/data.json')) {
+    scheduler.loadAll(runScheduler);
+}
 
 console.log('Bot Started, Waiting for "/start {schedulerName}" command');
 
@@ -129,7 +130,7 @@ bot.onText(/\/at (.+)/, (msg, match) => {
     // SAVE SCHEDULERS TO FILE
     scheduler.saveAll();
 
-    runScheduler(userId);
+    runScheduler(scheduler.get(userId));
 });
 
 
@@ -205,7 +206,7 @@ bot.onText(/\/run/, (msg, match) => {
 
     // RUN SCRIPT
     if(scheduler.get(userId) && !scheduler.get(userId).interval)
-        runScheduler(userId);
+        runScheduler(scheduler.get(userId));
     else
         bot.sendMessage(userId, 'Scheduler was already in run state');
 });
@@ -240,16 +241,18 @@ let validateCommand = (msg) => {
     return scheduler.get(userId);
 };
 
-let execUzTrainSearch = (userId, returnResultImmediately) => {
-    uz.searchTrain(scheduler.get(userId).from.value, scheduler.get(userId).to.value, scheduler.get(userId).at).then(
+let execUzTrainSearch = (schedulerObject, returnResultImmediately) => {
+    let userId = schedulerObject.id;
+
+    uz.searchTrain(schedulerObject.from.value, schedulerObject.to.value, schedulerObject.at).then(
         result => {
-            scheduler.get(userId).lastResponse = result;
+            schedulerObject.lastResponse = result;
             bot.sendMessage(userId, result);
 
             console.log(`Searching for train ${scheduler.trainTitle(userId)}: ${result}`);
         },
         error => {
-            scheduler.get(userId).lastResponse = error;
+            schedulerObject.lastResponse = error;
 
             if(returnResultImmediately)
                 bot.sendMessage(userId, result);
@@ -277,10 +280,11 @@ let runAll = (userId) => {
     //todo
 };
 
-let runScheduler = (userId) => {
-    scheduler.get(userId).lastResponse = '';
+let runScheduler = (schedulerObject) => {
+    let userId = schedulerObject.id;
+    schedulerObject.lastResponse = '';
 
-    console.log('Data is ready for scheduler', scheduler.get(userId));
+    console.log('Data is ready for scheduler', schedulerObject);
 
     bot.sendMessage(userId, 'Departure time is set, script will check each '
         + Math.round(scriptRepeatTime/60000) + ' minutes'
@@ -288,13 +292,13 @@ let runScheduler = (userId) => {
         + '. Check /schedulers command to view all schedulers',
         helper.hideKeyboardOpts()
     );
-    // SEARCH FOR RESULT & RUN SCHEDULER
-    execUzTrainSearch(userId, true);
     // timeplan.repeat({
     //     period: "1m",
     //     task: () => execUzTrainSearch(userId, true)
     // });
     // console.log('Added task to timeplan')
 
-    scheduler.get(userId).interval = setInterval(() => execUzTrainSearch(userId), scriptRepeatTime);
+    // SEARCH FOR RESULT & RUN SCHEDULER
+    execUzTrainSearch(schedulerObject, true);
+    schedulerObject.interval = setInterval(execUzTrainSearch(schedulerObject), scriptRepeatTime);
 };
