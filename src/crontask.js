@@ -6,6 +6,7 @@
 
 import TelegramBot from 'node-telegram-bot-api';
 import uz from './uz';
+const fs = require('fs');
 
 let bot;
 const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
