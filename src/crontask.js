@@ -40,9 +40,14 @@ let schedulers = [{
         at: '17.07.2017',
     }];
 
+
+console.log('Cron script started');
+
 (function iterate(index) {
-    if(index > schedulers.length -1)
+    if(index > schedulers.length -1) {
+        console.log('Script finished for all schedulers');
         process.exit(0);
+    }
 
     let sched = schedulers[index];
     console.log(`Task ${index} of ${schedulers.length -1}, search for ${sched.title} ${sched.at}`);
