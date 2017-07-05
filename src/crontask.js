@@ -55,7 +55,7 @@ let schedulers = [{
             setTimeout(() => iterate(index + 1), TIMEOUT);
         },
         error => {
-            bot.sendMessage(USER_ID, `${sched.title} at ${sched.at} ${error}`);
+            // bot.sendMessage(USER_ID, `${sched.title} at ${sched.at} ${error}`);
             console.log(error);
 
             setTimeout(() => iterate(index + 1), TIMEOUT);
