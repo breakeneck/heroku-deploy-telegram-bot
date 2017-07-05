@@ -45,7 +45,7 @@ let schedulers = [{
         process.exit(0);
 
     let sched = schedulers[index];
-    console.log(`Таск ${index} з ${schedulers.length -1}, пошук ${sched.title} ${sched.at}`);
+    console.log(`Task ${index} of ${schedulers.length -1}, search for ${sched.title} ${sched.at}`);
 
     uz.searchTrain(sched.from, sched.to, sched.at).then(
         result => {
@@ -55,7 +55,7 @@ let schedulers = [{
             setTimeout(() => iterate(index + 1), TIMEOUT);
         },
         error => {
-            bot.sendMessage(USER_ID, `${sched.title} at ${sched.at} ${result}`);
+            bot.sendMessage(USER_ID, `${sched.title} at ${sched.at} ${error}`);
             console.log(error);
 
             setTimeout(() => iterate(index + 1), TIMEOUT);
