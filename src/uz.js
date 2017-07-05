@@ -23,6 +23,8 @@ exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
                 station_id_till,
                 date_dep
             }}, (e, r, body) => {
+                // console.log(body);
+
                 if(typeof body.value === 'string')
                     reject(time() + body.value);
                 else
