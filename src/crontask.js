@@ -10,7 +10,7 @@ const fs = require('fs');
 
 let bot;
 const token = JSON.parse(fs.readFileSync(__dirname+'/../config/data.json')).telegram_token;
-bot = new TelegramBot(token, {polling: true});
+bot = new TelegramBot(token);//, {polling: true});
 
 const TIMEOUT = 10000;
 const USER_ID = 390016459;
@@ -42,6 +42,7 @@ let schedulers = [{
 
 
 uz.log('Cron script started');
+// bot.sendMessage(USER_ID, 'Hello, friend');
 
 (function iterate(index) {
     if(index > schedulers.length -1) {
