@@ -9,15 +9,27 @@
 // import scheduler from './scheduler';
 
 
-const FORMAT = 'YYYY-MM-DD HH:mm';
+const TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 let moment = require('moment-timezone');
 moment.tz.setDefault('America/New_York');
 
-console.log('Local', moment().format(FORMAT));
-console.log('UTC', moment().utc().format(FORMAT));
-console.log('Kiev', moment().tz('Europe/Kiev').format(FORMAT));
-console.log('UTC +3 offset', moment().utcOffset('+0300').format(FORMAT));
-console.log('UTC +3 zone', moment().zone('+0300').format(FORMAT));
+console.log('Local', moment().format(TIME_FORMAT));
+console.log('UTC', moment().utc().format(TIME_FORMAT));
+console.log('Kiev', moment().tz('Europe/Kiev').format(TIME_FORMAT));
+console.log('UTC +3 offset', moment().utcOffset('+0300').format(TIME_FORMAT));
+
+
+let log = function() {
+    let args = [].slice.call(arguments);
+    args.unshift(moment().tz('Europe/Kiev').format(TIME_FORMAT));
+
+    console.log.apply(null, args);
+};
+
+// log('yohooh');
+// log('yasdas', 123213, 'Blabl');
+
+// console.log('UTC +3 zone', moment().zone('+0300').format(FORMAT));
 
 
 /*

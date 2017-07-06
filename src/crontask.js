@@ -41,16 +41,16 @@ let schedulers = [{
     }];
 
 
-console.log('Cron script started');
+uz.log('Cron script started');
 
 (function iterate(index) {
     if(index > schedulers.length -1) {
-        console.log('Script finished for all schedulers');
+        uz.log('Script finished for all schedulers');
         process.exit(0);
     }
 
     let sched = schedulers[index];
-    console.log(`Task ${index} of ${schedulers.length -1}, search for ${sched.title} ${sched.at}`);
+    uz.log(`Task ${index} of ${schedulers.length -1}, search for ${sched.title} ${sched.at}`);
 
     uz.searchTrain(sched.from, sched.to, sched.at).then(
         result => {
