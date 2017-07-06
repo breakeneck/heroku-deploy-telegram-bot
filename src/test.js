@@ -9,6 +9,15 @@
 import scheduler from './scheduler';
 
 
+const FORMAT = 'YYYY-MM-DD HH:mm';
+let moment = require('moment-timezone');
+moment.tz.setDefault('America/New_York');
+
+console.log('Local', moment().format(FORMAT));
+console.log('UTC', moment().utc().format(FORMAT));
+console.log('Kiev', moment().tz('Europe/Kiev').format(FORMAT));
+console.log('UTC +3 offset', moment().utcOffset('+0300').format(FORMAT));
+console.log('UTC +3 zone', moment().zone('+0300').format(FORMAT));
 
 
 /*
