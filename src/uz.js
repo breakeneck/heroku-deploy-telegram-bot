@@ -45,7 +45,7 @@ exports.searchStation = (term) =>
 
 
 // LOCAL HELPERS
-let time = () => moment().format('hh:mm:ss')+' - ';
+let time = () => moment().tz().format('hh:mm:ss')+' - ';
 
 let formatResponse = (body) => {
     let resultArr = [];
