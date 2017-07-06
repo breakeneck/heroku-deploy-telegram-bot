@@ -17,7 +17,7 @@ moment.tz.setDefault('America/New_York');
 
 let time = () => moment().tz('Europe/Kiev').format('HH:mm:ss')+' - ';
 
-let log = () => console.log(moment().tz('Europe/Kiev').format(TIME_FORMAT));
+exports.log = () => console.log(moment().tz('Europe/Kiev').format(TIME_FORMAT));
 
 exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
     new Promise((resolve, reject) => {
