@@ -12,6 +12,7 @@ const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/';
 
 let moment = require('moment-timezone');
 let tz = 'Europe/Kiev';
+moment.tz.setDefault('America/New_York');
 //moment.tz.setDefault('Europe/Kiev');
 
 exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
