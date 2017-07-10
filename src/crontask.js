@@ -18,22 +18,26 @@ const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
 
 
-let schedulers = [{
+let schedulers = [
+    /*{
         title: 'Луцьк - Дніпро',
         from: LUTSK_ID,
         to: DNIPRO_ID,
         at: '12.07.2017',
-    },{
+    },
+    {
         title: 'Луцьк - Дніпро',
         from: LUTSK_ID,
         to: DNIPRO_ID,
         at: '13.07.2017',
-    },{
+    },*/
+    {
         title: 'Дніпро - Луцьк',
         from: DNIPRO_ID,
         to: LUTSK_ID,
         at: '16.07.2017',
-    },{
+    },
+    {
         title: 'Дніпро - Луцьк',
         from: DNIPRO_ID,
         to: LUTSK_ID,
