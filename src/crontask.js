@@ -16,7 +16,8 @@ const TIMEOUT = 10000;
 const USER_ID = 390016459;
 const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
-const POLTAVA_ID = 2204580;
+const POLTAVA_KIEV_ID = 2204580;
+const POLTAVA_PIVDENNA_ID = 2204590;
 
 
 let schedulers = [
@@ -46,13 +47,25 @@ let schedulers = [
     },
     {
         title: 'Полтава - Луцьк',
-        from: POLTAVA_ID,
+        from: POLTAVA_KIEV_ID,
         to: LUTSK_ID,
         at: '16.07.2017',
     },
     {
         title: 'Полтава - Луцьк',
-        from: POLTAVA_ID,
+        from: POLTAVA_KIEV_ID,
+        to: LUTSK_ID,
+        at: '17.07.2017',
+    },
+    {
+        title: 'Полтава - Луцьк',
+        from: POLTAVA_PIVDENNA_ID,
+        to: LUTSK_ID,
+        at: '16.07.2017',
+    },
+    {
+        title: 'Полтава - Луцьк',
+        from: POLTAVA_PIVDENNA_ID,
         to: LUTSK_ID,
         at: '17.07.2017',
     }];
