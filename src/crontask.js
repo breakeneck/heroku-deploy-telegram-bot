@@ -16,7 +16,7 @@ const TIMEOUT = 10000;
 const USER_ID = 390016459;
 const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
-const POLTAVA_ID = 2204590;
+const POLTAVA_ID = 2204580;
 
 
 let schedulers = [
@@ -43,6 +43,12 @@ let schedulers = [
         from: DNIPRO_ID,
         to: LUTSK_ID,
         at: '17.07.2017',
+    },
+    {
+        title: 'Полтава - Луцьк',
+        from: POLTAVA_ID,
+        to: LUTSK_ID,
+        at: '16.07.2017',
     },
     {
         title: 'Полтава - Луцьк',
