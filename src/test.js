@@ -9,22 +9,22 @@
 // import scheduler from './scheduler';
 
 
-const TIME_FORMAT = 'YYYY-MM-DD HH:mm';
-let moment = require('moment-timezone');
-moment.tz.setDefault('America/New_York');
-
-console.log('Local', moment().format(TIME_FORMAT));
-console.log('UTC', moment().utc().format(TIME_FORMAT));
-console.log('Kiev', moment().tz('Europe/Kiev').format(TIME_FORMAT));
-console.log('UTC +3 offset', moment().utcOffset('+0300').format(TIME_FORMAT));
-
-
-let log = function() {
-    let args = [].slice.call(arguments);
-    args.unshift(moment().tz('Europe/Kiev').format(TIME_FORMAT));
-
-    console.log.apply(null, args);
-};
+// const TIME_FORMAT = 'YYYY-MM-DD HH:mm';
+// let moment = require('moment-timezone');
+// moment.tz.setDefault('America/New_York');
+//
+// console.log('Local', moment().format(TIME_FORMAT));
+// console.log('UTC', moment().utc().format(TIME_FORMAT));
+// console.log('Kiev', moment().tz('Europe/Kiev').format(TIME_FORMAT));
+// console.log('UTC +3 offset', moment().utcOffset('+0300').format(TIME_FORMAT));
+//
+//
+// let log = function() {
+//     let args = [].slice.call(arguments);
+//     args.unshift(moment().tz('Europe/Kiev').format(TIME_FORMAT));
+//
+//     console.log.apply(null, args);
+// };
 
 // log('yohooh');
 // log('yasdas', 123213, 'Blabl');
@@ -32,7 +32,7 @@ let log = function() {
 // console.log('UTC +3 zone', moment().zone('+0300').format(FORMAT));
 
 
-/*
+
 import uz from './uz';
 import helper from './helper';
 
@@ -40,7 +40,7 @@ let term = 'луц';
 let station_id_from = '2218060';
 let station_id_till = '2218400';
 let date_dep = '30.07.2017';
-*/
+
 
 
 

@@ -62,7 +62,7 @@ let formatResponse = (body) => {
         let tickets = value.types.map(type => {
             return type.places + ' ' + type.title;
         }).join("\n");
-        let message = `${value.from.station} - ${value.till.station} (${value.from.src_date}) \n${tickets}`;
+        let message = value.from.station+' - '+value.till.station+' '+value.from.src_date+"\n"+tickets`;
         resultArr.push(message);
     });
     console.log(resultArr.join("\n"));
