@@ -18,6 +18,7 @@ const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
 const POLTAVA_KIEV_ID = 2204580;
 const POLTAVA_PIVDENNA_ID = 2204590;
+const ODESSA_ID = 2208001;
 
 
 let schedulers = [
@@ -34,41 +35,36 @@ let schedulers = [
         at: '13.07.2017',
     },*/
     {
-        title: 'Дніпро - Луцьк',
-        from: DNIPRO_ID,
-        to: LUTSK_ID,
-        at: '16.07.2017',
+        title: 'Луцьк - Одеса',
+        from: LUTSK_ID,
+        to: ODESSA_ID,
+        at: '31.08.2017',
     },
     {
-        title: 'Дніпро - Луцьк',
-        from: DNIPRO_ID,
-        to: LUTSK_ID,
-        at: '17.07.2017',
+        title: 'Луцьк - Одеса',
+        from: LUTSK_ID,
+        to: ODESSA_ID,
+        at: '01.09.2017',
     },
     {
-        title: 'Полтава - Луцьк',
-        from: POLTAVA_KIEV_ID,
-        to: LUTSK_ID,
-        at: '16.07.2017',
+        title: 'Луцьк - Одеса',
+        from: LUTSK_ID,
+        to: ODESSA_ID,
+        at: '02.09.2017',
     },
     {
-        title: 'Полтава - Луцьк',
-        from: POLTAVA_KIEV_ID,
+        title: 'Одеса - Луцьк',
+        from: ODESSA_ID,
         to: LUTSK_ID,
-        at: '17.07.2017',
+        at: '10.07.2017',
     },
     {
-        title: 'Полтава - Луцьк',
-        from: POLTAVA_PIVDENNA_ID,
+        title: 'Одеса - Луцьк',
+        from: ODESSA_ID,
         to: LUTSK_ID,
-        at: '16.07.2017',
-    },
-    {
-        title: 'Полтава - Луцьк',
-        from: POLTAVA_PIVDENNA_ID,
-        to: LUTSK_ID,
-        at: '17.07.2017',
-    }];
+        at: '11.07.2017',
+    }
+];
 
 
 uz.log('Cron script started');
