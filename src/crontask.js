@@ -19,6 +19,7 @@ const DNIPRO_ID = 2210700;
 const POLTAVA_KIEV_ID = 2204580;
 const POLTAVA_PIVDENNA_ID = 2204590;
 const ODESSA_ID = 2208001;
+const NOVOOLEKSIIVKA_ID = 2210790;
 
 
 let schedulers = [
@@ -34,12 +35,14 @@ let schedulers = [
         to: DNIPRO_ID,
         at: '13.07.2017',
     },*/
+
     {
-        title: 'Луцьк - Одеса',
+        title: 'Луцьк - Новоолексіївка',
         from: LUTSK_ID,
-        to: ODESSA_ID,
-        at: '31.08.2017',
+        to: NOVOOLEKSIIVKA_ID,
+        at: '23.08.2017',
     },
+    /*
     {
         title: 'Луцьк - Одеса',
         from: LUTSK_ID,
@@ -64,6 +67,7 @@ let schedulers = [
         to: LUTSK_ID,
         at: '11.07.2017',
     }
+*/
 ];
 
 
