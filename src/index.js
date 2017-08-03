@@ -277,6 +277,7 @@ let sendStatus = (userId, currentScheduler) => {
 };
 
 function runScheduler (schedulerObject) {
+    return false;
     let userId = schedulerObject.id;
     schedulerObject.lastResponse = '';
 
