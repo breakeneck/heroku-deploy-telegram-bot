@@ -40,6 +40,11 @@ bot.onText(/\/start (.+)/, (msg, match) => {
     bot.sendMessage(userId, 'УкрЗалізниця pinger. Use /from command to add departure station', helper.hideKeyboardOpts());
 });
 
+// RUNNING BOT
+bot.onText(/\/me/, (msg, match) => {
+    bot.sendMessage(msg.chat.id, 'Your ID = '+msg.from.id);
+});
+
 
 // RUNNING BOT
 bot.onText(/\/schedulers/, (msg, match) => {
