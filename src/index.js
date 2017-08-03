@@ -42,6 +42,7 @@ bot.onText(/\/start (.+)/, (msg, match) => {
 
 // RUNNING BOT
 bot.onText(/\/me/, (msg, match) => {
+    console.log('User ID = ',msg.from.id);
     bot.sendMessage(msg.chat.id, 'Your ID = '+msg.from.id);
 });
 
