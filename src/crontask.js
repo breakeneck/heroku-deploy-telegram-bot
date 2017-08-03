@@ -13,7 +13,8 @@ const token = JSON.parse(fs.readFileSync(__dirname+'/../config/data.json')).tele
 bot = new TelegramBot(token);//, {polling: true});
 
 const TIMEOUT = 10000;
-const USER_ID = 390016459;
+//const USER_ID = 390016459; // YURI
+const USER_ID = 408632089; // YURI
 const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
 const POLTAVA_KIEV_ID = 2204580;
