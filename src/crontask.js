@@ -22,8 +22,6 @@ const POLTAVA_PIVDENNA_ID = 2204590;
 const ODESSA_ID = 2208001;
 const NOVOOLEKSIIVKA_ID = 2210790;
 
-// echo some test commit to check HEAD update
-
 
 let schedulers = [
     /*{
