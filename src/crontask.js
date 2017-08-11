@@ -24,6 +24,7 @@ const NOVOOLEKSIIVKA_ID = 2210790;
 
 // echo some test commit to check HEAD update
 
+// see my updates in branch
 
 let schedulers = [
     /*{
