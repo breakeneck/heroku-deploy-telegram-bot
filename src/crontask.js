@@ -21,11 +21,7 @@ const POLTAVA_KIEV_ID = 2204580;
 const POLTAVA_PIVDENNA_ID = 2204590;
 const ODESSA_ID = 2208001;
 const NOVOOLEKSIIVKA_ID = 2210790;
-// Yohoho, still continue work in master
 
-// echo some test commit to check HEAD update
-
-// see my updates in branch
 
 let schedulers = [
     /*{
