@@ -14,7 +14,7 @@ bot = new TelegramBot(token);//, {polling: true});
 
 const TIMEOUT = 10000;
 const USER_ID = 390016459; // YURI
-// const USER_ID = 408632089; // YURI
+// const USER_ID = 408632089; // NOT ME
 const LUTSK_ID = 2218060;
 const DNIPRO_ID = 2210700;
 const POLTAVA_KIEV_ID = 2204580;
@@ -36,7 +36,7 @@ let schedulers = [
 
 
 uz.log('Cron script started');
-// bot.sendMessage(USER_ID, 'Hello, friend');
+bot.sendMessage(USER_ID, 'Hello');
 
 (function iterate(index) {
     if(index > schedulers.length -1) {
