@@ -36,7 +36,7 @@ let schedulers = [
 
 
 uz.log('Cron script started');
-bot.sendMessage(USER_ID, 'Hello');
+// bot.sendMessage(USER_ID, 'Hello');
 
 (function iterate(index) {
     if(index > schedulers.length -1) {
