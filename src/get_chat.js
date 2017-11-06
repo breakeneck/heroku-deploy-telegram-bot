@@ -5,6 +5,8 @@
  */
 
 import TelegramBot from 'node-telegram-bot-api';
+const fs = require('fs');
+const token = JSON.parse(fs.readFileSync('./config/data.json')).telegram_token;
 const bot = new TelegramBot(token, {polling: true});
 
 

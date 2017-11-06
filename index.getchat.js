@@ -5,7 +5,5 @@
  */
 
 
-
-
 require('babel-core/register');
 require('./src/get_chat.js');
