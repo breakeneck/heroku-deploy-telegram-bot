@@ -6,6 +6,7 @@
 
 
 import request from 'request';
+import axious from 'axios';
 
 const SEARCH_URL = 'http://booking.uz.gov.ua/purchase/search/';
 const STATION_URL = 'http://booking.uz.gov.ua/purchase/station/';
@@ -26,6 +27,23 @@ exports.log = function() {
 
 exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
     new Promise((resolve, reject) => {
+        axious.post(SEARCH_URL, {
+            station_id_from,
+            station_id_till,
+            date_dep
+        }).then((response) => {
+                // console.log(response); return;
+
+                if(typeof response.data.value === 'string')
+                    reject(time() + response.data.value);
+                else
+                    resolve(time() + formatResponse(response.data));
+        });
+    });
+
+/*
+exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
+    new Promise((resolve, reject) => {
         request.post(SEARCH_URL, {
             json: true,
             form:{
@@ -33,14 +51,14 @@ exports.searchTrain = (station_id_from, station_id_till, date_dep) =>
                 station_id_till,
                 date_dep
             }}, (e, r, body) => {
-                // console.log(body);
+                console.log(e, body);
 
                 if(typeof body.value === 'string')
                     reject(time() + body.value);
                 else
                     resolve(time() + formatResponse(body));
         });
-    });
+    });*/
 
 exports.searchStation = (term) =>
     new Promise((resolve, reject) => {
